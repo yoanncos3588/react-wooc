@@ -1,37 +1,57 @@
-import { camelCase } from "change-case/keys";
 import { UrlParams } from "../../types/apiParams";
-import { Product } from "../../types/products";
 import { axiosInstanceWoo } from "./api";
 
-interface PaginatedPayload {
-  totalPages: number;
-  totalItems: number;
-}
-
-interface PayloadFetchProducts extends PaginatedPayload {
-  products: Product[];
-}
-
-interface PayloadFetchVariations extends PaginatedPayload {
-  variations: ProductVariation[];
-}
-
-export const product = {
+const product = {
   /**
    * Fetch products from api, with possibles filters
    * @param params @type {UrlParams} : obj listing all parameters use to construct url parameters for filtering
    */
-  fetchProducts: async (params?: UrlParams): Promise<PayloadFetchProducts> => {
-    const res = await axiosInstanceWoo.get("/products", { params: params });
-
-    const productsRaw = res.data;
-    const products: Product[] = productsRaw.map((product: unknown) => camelCase(product, 2));
-
-    const totalPages = Number(res.headers["x-wp-totalpages"]);
-    const totalItems = Number(res.headers["x-wp-total"]);
-
-    const payload: PayloadFetchProducts = { products, totalPages, totalItems };
-
-    return payload;
+  getAll: async (params?: UrlParams) => {
+    return await axiosInstanceWoo.get("/products", { params });
+  },
+  /**
+   * Fetch products from api by id
+   * @param productId @type {number} : product id to fetch
+   */
+  getById: async (productId: number, params?: UrlParams) => {
+    return await axiosInstanceWoo.get(`/products/${productId}`, { params });
+  },
+  /**
+   * Fetch variation from api by id
+   * @param productId @type {number} : product id parent of the variation
+   * @param productVariationId @type {number} : variation id to fetch
+   */
+  getVariationById: async (productId: number, productVariationId: number, params?: UrlParams) => {
+    return await axiosInstanceWoo.get(`/products/${productId}/variations/${productVariationId}`, { params });
+  },
+  /**
+   * Fetch variations from api
+   * @param productId @type {number} : product id parent of the variations
+   * @param params @type {UrlParams} : obj listing all parameters use to construct url parameters for filtering
+   */
+  getVariations: async (productId: number, params?: UrlParams) => {
+    return await axiosInstanceWoo.get(`/products/${productId}/variations`, { params });
+  },
+  /**
+   * Fetch attributes from api
+   */
+  getAttributes: async (params?: UrlParams) => {
+    return await axiosInstanceWoo.get(`/products/attributes?per_page=100`, { params });
+  },
+  /**
+   * Fetch attribute from api by id
+   * @param attributeId @type {number} : attribute's id
+   */
+  getAttributeById: async (attributeId: number, params?: UrlParams) => {
+    return await axiosInstanceWoo.get(`/products/attributes/${attributeId}`, { params });
+  },
+  /**
+   * Fetch attributes terms from api
+   * @param attributeId @type {number} : attribute's id
+   */
+  getAttributeTerms: async (attributeId: number, params?: UrlParams) => {
+    return await axiosInstanceWoo.get(`/products/attributes/${attributeId}/terms?per_page=100`, { params });
   },
 };
+
+export default product;
