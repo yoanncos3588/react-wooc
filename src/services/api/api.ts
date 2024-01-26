@@ -1,6 +1,11 @@
 import axios, { AxiosRequestHeaders } from "axios";
 import OAuth from "oauth-1.0a";
 import CryptoJS from "crypto-js";
+import { category } from "./category";
+
+export const api = {
+  category,
+};
 
 export const axiosInstanceWoo = axios.create({
   baseURL: import.meta.env.VITE_API_URL_WOO,
