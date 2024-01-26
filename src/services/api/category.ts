@@ -7,7 +7,7 @@ const category = {
    * https://woocommerce.github.io/woocommerce-rest-api-docs/#product-categories
    */
   get: async (params?: UrlParams) => {
-    return await axiosInstanceWoo.get(`/products/categories`, { params });
+    return await axiosInstanceWoo.get(`/products/categories`, params);
   },
 };
 

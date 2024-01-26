@@ -1,10 +1,12 @@
 import axios, { AxiosRequestHeaders } from "axios";
 import OAuth from "oauth-1.0a";
 import CryptoJS from "crypto-js";
-import { category } from "./category";
+import category from "./category";
+import product from "./product";
 
 export const api = {
   category,
+  product,
 };
 
 export const axiosInstanceWoo = axios.create({
