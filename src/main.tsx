@@ -9,6 +9,19 @@ import Root from "./routes/Root.tsx";
 import ErrorPage from "./routes/ErrorPage.tsx";
 import CategoryPage from "./routes/CategoryPage.tsx";
 import ProductPage from "./routes/ProductPage.tsx";
+import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+    primary: {
+      main: "#5c6bc0",
+    },
+    secondary: {
+      main: "#00e676",
+    },
+  },
+});
 
 const router = createBrowserRouter([
   {
@@ -30,6 +43,9 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </React.StrictMode>
 );
