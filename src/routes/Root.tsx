@@ -25,7 +25,7 @@ const Root = () => {
         <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer}>
           <DrawerContent />
         </Drawer>
-        <Container sx={{ my: theme.spacing(1), flexGrow: 1 }}>
+        <Container sx={{ my: theme.spacing(5), flexGrow: 1 }}>
           <Outlet />
         </Container>
         <Box sx={{ backgroundColor: theme.palette.primary.light, height: "50px" }}>Footer content here</Box>
