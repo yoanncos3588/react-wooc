@@ -11,7 +11,7 @@ const Root = () => {
     if (event.type === "keydown" && ((event as React.KeyboardEvent).key === "Tab" || (event as React.KeyboardEvent).key === "Shift")) {
       return;
     }
-    setDrawerOpen(!drawerOpen);
+    setDrawerOpen((prevState) => !prevState);
   };
 
   return (
