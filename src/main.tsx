@@ -7,25 +7,15 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { RouterProvider } from "react-router-dom";
 import routerInstance from "./router";
-import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
-
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-    primary: {
-      main: "#5c6bc0",
-    },
-    secondary: {
-      main: "#00e676",
-    },
-  },
-});
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import darkTheme from "./theme";
 
 const router = routerInstance;
+const theme = darkTheme;
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <RouterProvider router={router} />
     </ThemeProvider>
