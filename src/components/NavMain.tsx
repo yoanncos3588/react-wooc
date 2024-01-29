@@ -1,9 +1,10 @@
 import { Button } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
+import StyledNavMain from "../styled/NavMain";
 
 const NavMain = () => {
   return (
-    <nav>
+    <StyledNavMain>
       <Button component={RouterLink} variant="text" sx={{ color: "white" }} to="/">
         Menu 1
       </Button>
@@ -16,7 +17,7 @@ const NavMain = () => {
       <Button component={RouterLink} variant="text" sx={{ color: "white" }} to="/">
         Menu 1
       </Button>
-    </nav>
+    </StyledNavMain>
   );
 };
 

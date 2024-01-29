@@ -8,7 +8,11 @@ import { Link as RouterLink } from "react-router-dom";
 import NavMain from "./NavMain";
 import ButtonMyAccount from "./ButtonMyAccount";
 
-const Header = () => {
+interface Props {
+  toggleDrawer: (event: React.KeyboardEvent | React.MouseEvent) => void;
+}
+
+const Header = ({ toggleDrawer }: Props) => {
   const theme = useTheme();
   const breakpointUpMd = useMediaQuery(theme.breakpoints.up("md"));
 
@@ -18,7 +22,7 @@ const Header = () => {
         {/** BURGER BUTTON */}
         {!breakpointUpMd && (
           <Box>
-            <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
+            <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }} onClick={(event) => toggleDrawer(event)}>
               <MenuIcon />
             </IconButton>
           </Box>
