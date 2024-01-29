@@ -4,10 +4,10 @@ import { Button, IconButton, Menu } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import NavAccount from "./NavAccount";
 import { useState } from "react";
+import { hideUpMd, showUpMd } from "../styled/utils";
 
 const ButtonMyAccount = () => {
   const theme = useTheme();
-  const breakpointUpMd = useMediaQuery(theme.breakpoints.up("md"));
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const open = Boolean(anchorEl);
@@ -20,29 +20,26 @@ const ButtonMyAccount = () => {
   };
   return (
     <>
-      {breakpointUpMd ? (
-        <Button
-          startIcon={<PersonIcon />}
-          sx={{ color: "white" }}
-          aria-controls={open ? "basic-menu" : undefined}
-          aria-haspopup="true"
-          aria-expanded={open ? "true" : undefined}
-          onClick={handleClick}
-        >
-          Mon compte
-        </Button>
-      ) : (
-        <IconButton
-          size="large"
-          sx={{ px: 2 }}
-          aria-controls={open ? "basic-menu" : undefined}
-          aria-haspopup="true"
-          aria-expanded={open ? "true" : undefined}
-          onClick={handleClick}
-        >
-          <PersonIcon />
-        </IconButton>
-      )}
+      <Button
+        startIcon={<PersonIcon />}
+        sx={{ color: "white", display: "none", ...showUpMd(theme, "flex") }}
+        aria-controls={open ? "basic-menu" : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? "true" : undefined}
+        onClick={handleClick}
+      >
+        Mon compte
+      </Button>
+      <IconButton
+        size="large"
+        sx={{ px: 2, ...hideUpMd(theme) }}
+        aria-controls={open ? "basic-menu" : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? "true" : undefined}
+        onClick={handleClick}
+      >
+        <PersonIcon />
+      </IconButton>
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}
