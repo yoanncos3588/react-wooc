@@ -15,7 +15,6 @@
     "@fontsource/roboto": "^5.0.8",
     "@mui/icons-material": "^5.15.6",
     "@mui/material": "^5.15.6",
-    "@mui/styled-engine-sc": "^6.0.0-alpha.13",
     "@reduxjs/toolkit": "^2.1.0",
     "@types/crypto-js": "^4.2.2",
     "@types/react-router-dom": "^5.3.3",

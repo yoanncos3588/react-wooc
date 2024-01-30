@@ -13,8 +13,3 @@ export interface BillingInfos {
 }
 
 export interface ShippingInfos extends Omit<BillingInfos, "email" | "phone"> {}
-
-//TODO Keep this function up to date if obj structure change
-export function isBilling(obj: BillingInfos | ShippingInfos): obj is BillingInfos {
-  return (obj as BillingInfos).email !== undefined;
-}

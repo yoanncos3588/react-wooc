@@ -3,6 +3,7 @@ import CategoryPage from "./routes/CategoryPage";
 import ErrorPage from "./routes/ErrorPage";
 import ProductPage from "./routes/ProductPage";
 import Root from "./routes/Root";
+import SignupPage from "./routes/SignupPage";
 
 const routerInstance = createBrowserRouter([
   {
@@ -10,6 +11,10 @@ const routerInstance = createBrowserRouter([
     element: <Root />,
     errorElement: <ErrorPage />,
     children: [
+      {
+        path: "signup",
+        element: <SignupPage />,
+      },
       {
         path: "category/:categoryId",
         element: <CategoryPage />,
