@@ -2,6 +2,7 @@ import React from "react";
 import { Grid, TextField, Typography } from "@mui/material";
 import { BillingInfos, ShippingInfos } from "../types/billingShipping";
 import { useTheme } from "@mui/material/styles";
+import SelectCountry from "./SelectCountry";
 
 interface Props {
   isBilling: boolean;
@@ -44,10 +45,13 @@ const FormUserInfosFields = ({ isBilling, data, setData }: Props) => {
       </Grid>
       {generateFormTextInputs("Prénom", "firstName")}
       {generateFormTextInputs("Nom", "lastName")}
-      {generateFormTextInputs("Adresse", "address_1", 12, 12)}
-      {generateFormTextInputs("Complément d'adresse", "address_2", 12, 5)}
+      {generateFormTextInputs("Adresse", "address_1", 12, 6)}
+      {generateFormTextInputs("Complément d'adresse", "address_2", 12, 6)}
       {generateFormTextInputs("CP", "postcode", undefined, 2)}
       {generateFormTextInputs("Ville", "city", undefined, 5)}
+      <Grid item md={5} xs={12}>
+        <SelectCountry id={`${formType}-country`} setData={setData} selectedCountry={data.country} />
+      </Grid>
       {generateFormTextInputs("Email", "email", 12, 6)}
       {generateFormTextInputs("Téléphone", "phone", 12, 6)}
     </>
