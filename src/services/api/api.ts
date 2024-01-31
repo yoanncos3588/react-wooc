@@ -3,10 +3,12 @@ import OAuth from "oauth-1.0a";
 import CryptoJS from "crypto-js";
 import category from "./category";
 import product from "./product";
+import country from "./country";
 
 export const api = {
   category,
   product,
+  country,
 };
 
 export const axiosInstanceWoo = axios.create({
