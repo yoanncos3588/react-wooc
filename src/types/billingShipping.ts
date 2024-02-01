@@ -1,4 +1,4 @@
-export interface BillingInfos {
+export interface LocationInfos {
   firstName: string;
   lastName: string;
   company: string | "";
@@ -12,4 +12,4 @@ export interface BillingInfos {
   phone: string;
 }
 
-export interface ShippingInfos extends Omit<BillingInfos, "email" | "phone"> {}
+export interface ShippingInfos extends Omit<LocationInfos, "email" | "phone"> {}

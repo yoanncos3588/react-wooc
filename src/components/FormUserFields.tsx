@@ -1,64 +1,93 @@
-import { Grid, TextField } from "@mui/material";
+import { Grid } from "@mui/material";
 import { Customer } from "../types/user";
-import React from "react";
-import { BillingInfos, ShippingInfos } from "../types/billingShipping";
+import React, { useState } from "react";
 import FormUserInfosFields from "./FormUserInfosFields";
+import InputText from "./InputText";
+import { isEmailValid, isRequired, minMaxLength, validate } from "../utils/validateInputs";
+import { FormErrors } from "../types/formErrors";
 
-interface Props {
-  customerData: Customer;
-  setCustomerData: React.Dispatch<React.SetStateAction<Customer>>;
-  billingData: BillingInfos;
-  setBillingData: React.Dispatch<React.SetStateAction<BillingInfos>>;
-  shippingData: ShippingInfos;
-  setShippingData: React.Dispatch<React.SetStateAction<ShippingInfos>>;
-}
+const FormUserFields = () => {
+  const [customerData, setCustomerData] = useState<Customer>({
+    email: "",
+    firstName: "",
+    lastName: "",
+    username: "",
+    billing: {
+      firstName: "",
+      lastName: "",
+      company: "",
+      address_1: "",
+      address_2: "",
+      city: "",
+      state: "",
+      postcode: "",
+      country: "",
+      email: "",
+      phone: "",
+    },
+    shipping: {
+      firstName: "",
+      lastName: "",
+      company: "",
+      address_1: "",
+      address_2: "",
+      city: "",
+      state: "",
+      postcode: "",
+      country: "",
+    },
+  });
 
-const FormUserFields = ({ customerData, setCustomerData, billingData, setBillingData, shippingData, setShippingData }: Props) => {
+  const [formErrors, setFormErrors] = useState<FormErrors>({});
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setCustomerData((prev) => ({ ...prev, [name]: value }));
+    setCustomerData((prev) => ({ ...prev, billing: { ...prev.billing }, shipping: { ...prev.shipping }, [name]: value }));
   };
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={4}>
-        <TextField
+        <InputText
           id="first-name"
           name="firstName"
           label="Prénom"
           variant="outlined"
-          required
           fullWidth
           value={customerData.firstName}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e)}
+          validationRules={validate(customerData.firstName, [isRequired, minMaxLength({ min: 1, max: 25 })])}
+          setFormErrors={setFormErrors}
         />
       </Grid>
       <Grid item xs={12} md={4}>
-        <TextField
+        <InputText
           id="last-name"
           name="lastName"
           label="Nom"
           variant="outlined"
-          required
           fullWidth
           value={customerData.lastName}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e)}
+          validationRules={validate(customerData.lastName, [isRequired, minMaxLength({ min: 1, max: 25 })])}
+          setFormErrors={setFormErrors}
         />
       </Grid>
       <Grid item xs={12} md={4}>
-        <TextField
+        <InputText
           id="email"
           name="email"
           label="Email"
           variant="outlined"
-          required
           fullWidth
           value={customerData.email}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e)}
+          validationRules={validate(customerData.email, [isRequired, isEmailValid])}
+          setFormErrors={setFormErrors}
         />
       </Grid>
-      <FormUserInfosFields isBilling={false} data={shippingData} setData={setShippingData} />
-      <FormUserInfosFields isBilling={true} data={billingData} setData={setBillingData as React.Dispatch<React.SetStateAction<ShippingInfos | BillingInfos>>} />
+      <FormUserInfosFields isBilling={false} customerData={customerData} setData={setCustomerData} setFormErrors={setFormErrors} />
+      <FormUserInfosFields isBilling={true} customerData={customerData} setData={setCustomerData} setFormErrors={setFormErrors} />
     </Grid>
   );
 };

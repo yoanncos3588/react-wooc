@@ -1,17 +1,18 @@
 import { Autocomplete, TextField } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { BillingInfos, ShippingInfos } from "../types/billingShipping";
 import { Country } from "../types/locations";
 import { countriesQuery } from "../queries";
+import { Customer } from "../types/user";
 
 interface Props {
   id: string;
-  setData: React.Dispatch<React.SetStateAction<ShippingInfos | BillingInfos>>;
+  setData: React.Dispatch<React.SetStateAction<Customer>>;
   selectedCountry: string;
+  isBilling: boolean;
 }
 
-const SelectCountry = ({ id, setData, selectedCountry }: Props) => {
+const SelectCountry = ({ id, setData, selectedCountry, isBilling }: Props) => {
   const { data } = useQuery(countriesQuery());
   const countries: Country[] = data?.data;
 
@@ -19,6 +20,14 @@ const SelectCountry = ({ id, setData, selectedCountry }: Props) => {
 
   function getCountryByCode(countryCode: string): Country | null {
     return countries.find((country) => country.code === countryCode) ?? null;
+  }
+
+  function handleOnChange(value: Country | null) {
+    if (isBilling) {
+      setData((prev) => ({ ...prev, billing: { ...prev.billing, country: value ? value.code : "" }, shipping: { ...prev.shipping } }));
+    } else {
+      setData((prev) => ({ ...prev, shipping: { ...prev.shipping, country: value ? value.code : "" }, billing: { ...prev.billing } }));
+    }
   }
 
   return (
@@ -32,7 +41,7 @@ const SelectCountry = ({ id, setData, selectedCountry }: Props) => {
         onInputChange={(e, newInputValue) => {
           setInputValue(newInputValue);
         }}
-        onChange={(e, value) => setData((prev) => ({ ...prev, country: value ? value.code : "" }))}
+        onChange={(e, value) => handleOnChange(value)}
         renderInput={(params) => <TextField {...params} label="Pays" />}
       />
     </>
