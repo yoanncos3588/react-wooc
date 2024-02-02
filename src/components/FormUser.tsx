@@ -92,7 +92,7 @@ const FormUser = () => {
         <FormUserInfosFields isBilling={false} data={data} setData={setData} setFormErrors={setFormErrors} />
         <FormUserInfosFields isBilling={true} data={data} setData={setData} setFormErrors={setFormErrors} />
       </Grid>
-      <Button variant="contained" color="success" sx={{ mt: theme.spacing(4) }}>
+      <Button variant="contained" color="success" sx={{ mt: theme.spacing(4) }} disabled={Object.keys(formErrors).length !== 0}>
         Créer mon compte
       </Button>
     </Box>
