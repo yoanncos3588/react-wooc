@@ -5,12 +5,12 @@ const formUserValidationRules = {
     email: [isRequired, isEmailValid],
     firstName: [isRequired, minMaxLength({ min: 1, max: 25 })],
     lastName: [isRequired, minMaxLength({ min: 1, max: 25 })],
-    billingFirstName: [isRequired, minMaxLength({ min: 1, max: 25 })],
-    billingLastName: [isRequired, minMaxLength({ min: 1, max: 25 })],
-    billingAddress_1: [isRequired, minMaxLength({ min: 1, max: 50 })],
-    billingCity: [isRequired, minMaxLength({ min: 1, max: 50 })],
-    billingPostcode: [isRequired, minMaxLength({ min: 1, max: 10 })],
-    billingCountry: [isRequired],
+    locationFirstName: [isRequired, minMaxLength({ min: 1, max: 25 })],
+    locationLastName: [isRequired, minMaxLength({ min: 1, max: 25 })],
+    locationAddress_1: [isRequired, minMaxLength({ min: 1, max: 50 })],
+    locationCity: [isRequired, minMaxLength({ min: 1, max: 50 })],
+    locationPostcode: [isRequired, minMaxLength({ min: 1, max: 10 })],
+    locationCountry: [isRequired],
   },
 };
 

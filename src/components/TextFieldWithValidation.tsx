@@ -1,43 +1,31 @@
 import { TextField, TextFieldProps } from "@mui/material";
 import { useState } from "react";
-import { InputStatus } from "../utils/validateInputs";
-import { FormErrors } from "../types/formErrors";
+import { Rule, validate } from "../utils/validateInputs";
+import { FormFieldsStatus } from "../types/FormFieldsStatus";
 
 type Props = TextFieldProps & {
-  setFormErrors: React.Dispatch<React.SetStateAction<FormErrors>>;
-  validationRules: InputStatus;
+  setFormFieldsStatus: React.Dispatch<React.SetStateAction<FormFieldsStatus>>;
+  validationRules: Rule[];
 };
 
-const TextFieldWithValidation = ({ setFormErrors, validationRules, ...props }: Props) => {
+const TextFieldWithValidation = ({ setFormFieldsStatus, validationRules, ...props }: Props) => {
   const [wasFocused, setWasFocused] = useState(false);
   const [errorLabel, setErrorLabel] = useState<undefined | string>(undefined);
 
   /**
-   * use validationRules to determine if input content is correct,
+   * validate input value on focus out
    */
   function handleOnBlur() {
-    console.log("handleOnBlur");
-    if (validationRules && setFormErrors) {
-      setWasFocused(true);
-      if (!validationRules.valid && props.name) {
-        console.log("shit happened");
-        setErrorLabel(validationRules.error);
-        setFormErrors((prev) => {
-          return { ...prev, [props.name!]: validationRules.error };
-        });
-      } else {
-        setErrorLabel(undefined);
-        console.log("all good");
-        if (validationRules.valid && props.name) {
-          console.log("set form error for good");
-          setFormErrors((prev) => {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { [props.name!]: _, ...rest } = prev;
-            return rest;
-          });
-        }
-      }
+    const inputStatus = validate(props.value as string, validationRules);
+    if (!inputStatus.valid && inputStatus.error) {
+      setErrorLabel(inputStatus.error);
+    } else {
+      setErrorLabel(undefined);
     }
+    setWasFocused(true);
+    setFormFieldsStatus((prev) => {
+      return { ...prev, [props.name!]: inputStatus };
+    });
   }
 
   return (

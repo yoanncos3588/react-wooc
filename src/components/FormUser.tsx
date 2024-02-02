@@ -1,7 +1,7 @@
 import { Box, Button, Grid } from "@mui/material";
 import theme from "../theme";
 import { useState } from "react";
-import { FormErrors } from "../types/formErrors";
+import { FormFieldsStatus } from "../types/FormFieldsStatus";
 import { Customer } from "../types/user";
 import { validate } from "../utils/validateInputs";
 import FormUserInfosFields from "./FormUserInfosFields";
@@ -40,7 +40,23 @@ const FormUser = () => {
     },
   });
 
-  const [formErrors, setFormErrors] = useState<FormErrors>({});
+  const [formFieldsStatus, setFormFieldsStatus] = useState<FormFieldsStatus>({
+    email: validate(data.email, formUserValidationRules.rules.email),
+    firstName: validate(data.firstName, formUserValidationRules.rules.firstName),
+    lastName: validate(data.lastName, formUserValidationRules.rules.lastName),
+    billingFirstname: validate(data.billing.firstName, formUserValidationRules.rules.locationFirstName),
+    billingLastName: validate(data.billing.lastName, formUserValidationRules.rules.locationLastName),
+    billingAddress_1: validate(data.billing.address_1, formUserValidationRules.rules.locationAddress_1),
+    billingCity: validate(data.billing.city, formUserValidationRules.rules.locationCity),
+    billingPostcode: validate(data.billing.postcode, formUserValidationRules.rules.locationPostcode),
+    billingCountry: validate(data.billing.country, formUserValidationRules.rules.locationCountry),
+    shippingFirstname: validate(data.shipping.firstName, formUserValidationRules.rules.locationFirstName),
+    shippingLastName: validate(data.shipping.lastName, formUserValidationRules.rules.locationCity),
+    shippingAddress_1: validate(data.shipping.address_1, formUserValidationRules.rules.locationAddress_1),
+    shippingCity: validate(data.shipping.city, formUserValidationRules.rules.locationCity),
+    shippingPostcode: validate(data.shipping.postcode, formUserValidationRules.rules.locationPostcode),
+    shippingCountry: validate(data.shipping.country, formUserValidationRules.rules.locationCountry),
+  });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -59,8 +75,8 @@ const FormUser = () => {
             fullWidth
             value={data.firstName}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e)}
-            validationRules={validate(data.firstName, formUserValidationRules.rules.firstName)}
-            setFormErrors={setFormErrors}
+            validationRules={formUserValidationRules.rules.firstName}
+            setFormFieldsStatus={setFormFieldsStatus}
           />
         </Grid>
         <Grid item xs={12} md={4}>
@@ -72,8 +88,8 @@ const FormUser = () => {
             fullWidth
             value={data.lastName}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e)}
-            validationRules={validate(data.lastName, formUserValidationRules.rules.lastName)}
-            setFormErrors={setFormErrors}
+            validationRules={formUserValidationRules.rules.lastName}
+            setFormFieldsStatus={setFormFieldsStatus}
           />
         </Grid>
         <Grid item xs={12} md={4}>
@@ -85,14 +101,14 @@ const FormUser = () => {
             fullWidth
             value={data.email}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e)}
-            validationRules={validate(data.email, formUserValidationRules.rules.email)}
-            setFormErrors={setFormErrors}
+            validationRules={formUserValidationRules.rules.email}
+            setFormFieldsStatus={setFormFieldsStatus}
           />
         </Grid>
-        <FormUserInfosFields isBilling={false} data={data} setData={setData} setFormErrors={setFormErrors} />
-        <FormUserInfosFields isBilling={true} data={data} setData={setData} setFormErrors={setFormErrors} />
+        <FormUserInfosFields isBilling={false} data={data} setData={setData} setFormFieldsStatus={setFormFieldsStatus} />
+        <FormUserInfosFields isBilling={true} data={data} setData={setData} setFormFieldsStatus={setFormFieldsStatus} />
       </Grid>
-      <Button variant="contained" color="success" sx={{ mt: theme.spacing(4) }} disabled={Object.keys(formErrors).length !== 0}>
+      <Button variant="contained" color="success" sx={{ mt: theme.spacing(4) }}>
         Créer mon compte
       </Button>
     </Box>

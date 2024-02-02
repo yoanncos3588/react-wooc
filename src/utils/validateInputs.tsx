@@ -5,7 +5,7 @@ export interface InputStatus {
   error?: string;
 }
 
-type Rule = (value: string) => InputStatus;
+export type Rule = (value: string) => InputStatus;
 
 export function isRequired(value: string): InputStatus {
   const valid = Boolean(value);

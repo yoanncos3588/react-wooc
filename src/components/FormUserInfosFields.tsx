@@ -4,18 +4,18 @@ import { useTheme } from "@mui/material/styles";
 import SelectCountry from "./SelectCountry";
 import { Customer } from "../types/user";
 import TextFieldWithValidation from "./TextFieldWithValidation";
-import { InputStatus, validate } from "../utils/validateInputs";
+import { Rule } from "../utils/validateInputs";
 import formUserValidationRules from "../utils/formUserValidationRules";
 import { LocationInfos } from "../types/billingShipping";
-import { FormErrors } from "../types/formErrors";
+import { FormFieldsStatus } from "../types/FormFieldsStatus";
 
 interface Props {
   isBilling: boolean;
   data: Customer;
   setData: React.Dispatch<React.SetStateAction<Customer>>;
-  setFormErrors: React.Dispatch<React.SetStateAction<FormErrors>>;
+  setFormFieldsStatus: React.Dispatch<React.SetStateAction<FormFieldsStatus>>;
 }
-const FormUserInfosFields = ({ isBilling, data, setData, setFormErrors }: Props) => {
+const FormUserInfosFields = ({ isBilling, data, setData, setFormFieldsStatus }: Props) => {
   const theme = useTheme();
   const formType = isBilling ? "billing" : "shipping";
 
@@ -29,7 +29,7 @@ const FormUserInfosFields = ({ isBilling, data, setData, setFormErrors }: Props)
     }
   };
 
-  const generateFormTextInputs = (label: string, key: keyof LocationInfos, xs = 12, md = 6, validationRules?: ((value: string) => InputStatus)[]) =>
+  const generateFormTextInputs = (label: string, key: keyof LocationInfos, xs = 12, md = 6, validationRules?: Rule[]) =>
     key in data[formType] && (
       <Grid item mb={theme.spacing(2)} xs={xs} md={md}>
         {validationRules ? (
@@ -41,8 +41,8 @@ const FormUserInfosFields = ({ isBilling, data, setData, setFormErrors }: Props)
             fullWidth
             value={data[formType][key]}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e)}
-            validationRules={validate(data[formType][key], validationRules)}
-            setFormErrors={setFormErrors}
+            validationRules={validationRules}
+            setFormFieldsStatus={setFormFieldsStatus}
           />
         ) : (
           <TextField
@@ -66,11 +66,11 @@ const FormUserInfosFields = ({ isBilling, data, setData, setFormErrors }: Props)
         </Typography>
       </Grid>
       {generateFormTextInputs("Prénom", "firstName", undefined, undefined, formUserValidationRules.rules.firstName)}
-      {generateFormTextInputs("Nom", "lastName", undefined, undefined, formUserValidationRules.rules.billingLastName)}
-      {generateFormTextInputs("Adresse", "address_1", 12, 6, formUserValidationRules.rules.billingAddress_1)}
+      {generateFormTextInputs("Nom", "lastName", undefined, undefined, formUserValidationRules.rules.locationLastName)}
+      {generateFormTextInputs("Adresse", "address_1", 12, 6, formUserValidationRules.rules.locationAddress_1)}
       {generateFormTextInputs("Complément d'adresse", "address_2", 12, 6)}
-      {generateFormTextInputs("CP", "postcode", undefined, 2, formUserValidationRules.rules.billingPostcode)}
-      {generateFormTextInputs("Ville", "city", undefined, 5, formUserValidationRules.rules.billingCity)}
+      {generateFormTextInputs("CP", "postcode", undefined, 2, formUserValidationRules.rules.locationPostcode)}
+      {generateFormTextInputs("Ville", "city", undefined, 5, formUserValidationRules.rules.locationCity)}
       <Grid item md={5} xs={12}>
         <SelectCountry id={`${formType}-country`} setData={setData} selectedCountry={data[formType].country} isBilling={isBilling} />
       </Grid>
