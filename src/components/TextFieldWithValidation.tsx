@@ -4,11 +4,11 @@ import { InputStatus } from "../utils/validateInputs";
 import { FormErrors } from "../types/formErrors";
 
 type Props = TextFieldProps & {
-  setFormErrors?: React.Dispatch<React.SetStateAction<FormErrors>>;
-  validationRules?: InputStatus;
+  setFormErrors: React.Dispatch<React.SetStateAction<FormErrors>>;
+  validationRules: InputStatus;
 };
 
-const InputText = ({ setFormErrors = undefined, validationRules = undefined, ...props }: Props) => {
+const TextFieldWithValidation = ({ setFormErrors, validationRules, ...props }: Props) => {
   const [wasFocused, setWasFocused] = useState(false);
   const [errorLabel, setErrorLabel] = useState<undefined | string>(undefined);
 
@@ -46,4 +46,4 @@ const InputText = ({ setFormErrors = undefined, validationRules = undefined, ...
   );
 };
 
-export default InputText;
+export default TextFieldWithValidation;

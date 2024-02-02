@@ -1,6 +1,6 @@
-import { Box, Button, Divider, Typography } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import FormUserFields from "../components/FormUserFields";
+import FormUser from "../components/FormUser";
 const SignupPage = () => {
   const theme = useTheme();
 
@@ -12,12 +12,7 @@ const SignupPage = () => {
         </Typography>
         <Divider sx={{ my: theme.spacing(2) }} />
       </Box>
-      <Box component="form" sx={{ mt: theme.spacing(8) }}>
-        <FormUserFields />
-        <Button variant="contained" color="success" sx={{ mt: theme.spacing(4) }}>
-          Créer mon compte
-        </Button>
-      </Box>
+      <FormUser />
     </>
   );
 };

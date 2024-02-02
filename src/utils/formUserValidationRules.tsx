@@ -1,6 +1,6 @@
 import { isEmailValid, isRequired, minMaxLength } from "./validateInputs";
 
-const userValidationRules = {
+const formUserValidationRules = {
   rules: {
     email: [isRequired, isEmailValid],
     firstName: [isRequired, minMaxLength({ min: 1, max: 25 })],
@@ -14,4 +14,4 @@ const userValidationRules = {
   },
 };
 
-export default userValidationRules;
+export default formUserValidationRules;
