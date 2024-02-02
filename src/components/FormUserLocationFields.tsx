@@ -1,48 +1,63 @@
-import React from "react";
+import React, { useState } from "react";
 import { Grid, TextField, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import SelectCountry from "./SelectCountry";
-import { Customer } from "../types/user";
 import TextFieldWithValidation from "./TextFieldWithValidation";
-import { Rule } from "../utils/validateInputs";
+import { Rule, validate } from "../utils/validateInputs";
 import formUserValidationRules from "../utils/formUserValidationRules";
 import { LocationInfos } from "../types/billingShipping";
 import { FormFieldsStatus } from "../types/FormFieldsStatus";
 
 interface Props {
   isBilling: boolean;
-  data: Customer;
-  setData: React.Dispatch<React.SetStateAction<Customer>>;
-  setFormFieldsStatus: React.Dispatch<React.SetStateAction<FormFieldsStatus>>;
+  setLocationFieldsValid: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const FormUserInfosFields = ({ isBilling, data, setData, setFormFieldsStatus }: Props) => {
+const FormUserInfosFields = ({ isBilling, setLocationFieldsValid }: Props) => {
+  const [locationData, setLocationData] = useState<LocationInfos>({
+    firstName: "",
+    lastName: "",
+    company: "",
+    address_1: "",
+    address_2: "",
+    city: "",
+    state: "",
+    postcode: "",
+    country: "",
+    email: "",
+    phone: "",
+  });
+
+  const [locationDataStatus, setLocationDataStatus] = useState<FormFieldsStatus>({
+    locationFirstname: validate(locationData.firstName, formUserValidationRules.rules.locationFirstName),
+    locationLastName: validate(locationData.lastName, formUserValidationRules.rules.locationLastName),
+    locationAddress_1: validate(locationData.address_1, formUserValidationRules.rules.locationAddress_1),
+    locationCity: validate(locationData.city, formUserValidationRules.rules.locationCity),
+    locationPostcode: validate(locationData.postcode, formUserValidationRules.rules.locationPostcode),
+    locationCountry: validate(locationData.country, formUserValidationRules.rules.locationCountry),
+  });
+
   const theme = useTheme();
   const formType = isBilling ? "billing" : "shipping";
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    const key = name.replace(`${formType}-`, "");
-    if (isBilling) {
-      setData((prev) => ({ ...prev, billing: { ...prev.billing, [key]: value } }));
-    } else {
-      setData((prev) => ({ ...prev, shipping: { ...prev.shipping, [key]: value } }));
-    }
+    setLocationData((prev) => ({ ...prev, [name]: value }));
   };
 
   const generateFormTextInputs = (label: string, key: keyof LocationInfos, xs = 12, md = 6, validationRules?: Rule[]) =>
-    key in data[formType] && (
+    key in locationData && (
       <Grid item mb={theme.spacing(2)} xs={xs} md={md}>
         {validationRules ? (
           <TextFieldWithValidation
             id={`${formType}-${key}`}
-            name={key}
+            name={key} // billingLastName or shippingLastName
             label={label}
             variant="outlined"
             fullWidth
-            value={data[formType][key]}
+            value={locationData[key]}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e)}
             validationRules={validationRules}
-            setFormFieldsStatus={setFormFieldsStatus}
+            setFormFieldsStatus={setLocationDataStatus}
           />
         ) : (
           <TextField
@@ -51,7 +66,7 @@ const FormUserInfosFields = ({ isBilling, data, setData, setFormFieldsStatus }: 
             label={label}
             variant="outlined"
             fullWidth
-            value={data[formType][key]}
+            value={locationData[key]}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e)}
           />
         )}
@@ -72,7 +87,7 @@ const FormUserInfosFields = ({ isBilling, data, setData, setFormFieldsStatus }: 
       {generateFormTextInputs("CP", "postcode", undefined, 2, formUserValidationRules.rules.locationPostcode)}
       {generateFormTextInputs("Ville", "city", undefined, 5, formUserValidationRules.rules.locationCity)}
       <Grid item md={5} xs={12}>
-        <SelectCountry id={`${formType}-country`} setData={setData} selectedCountry={data[formType].country} isBilling={isBilling} />
+        <SelectCountry id={`${formType}-country`} setData={setLocationData} selectedCountry={locationData.country} />
       </Grid>
       {isBilling && (
         <>

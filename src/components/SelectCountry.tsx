@@ -3,16 +3,15 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Country } from "../types/locations";
 import { countriesQuery } from "../queries";
-import { Customer } from "../types/user";
+import { LocationInfos } from "../types/billingShipping";
 
 interface Props {
   id: string;
-  setData: React.Dispatch<React.SetStateAction<Customer>>;
+  setData: React.Dispatch<React.SetStateAction<LocationInfos>>;
   selectedCountry: string;
-  isBilling: boolean;
 }
 
-const SelectCountry = ({ id, setData, selectedCountry, isBilling }: Props) => {
+const SelectCountry = ({ id, setData, selectedCountry }: Props) => {
   const { data } = useQuery(countriesQuery());
   const countries: Country[] = data?.data;
 
@@ -23,11 +22,7 @@ const SelectCountry = ({ id, setData, selectedCountry, isBilling }: Props) => {
   }
 
   function handleOnChange(value: Country | null) {
-    if (isBilling) {
-      setData((prev) => ({ ...prev, billing: { ...prev.billing, country: value ? value.code : "" }, shipping: { ...prev.shipping } }));
-    } else {
-      setData((prev) => ({ ...prev, shipping: { ...prev.shipping, country: value ? value.code : "" }, billing: { ...prev.billing } }));
-    }
+    setData((prev) => ({ ...prev, country: value ? value.code : "" }));
   }
 
   return (
