@@ -4,11 +4,11 @@ import { Rule, validate } from "../utils/validateInputs";
 import { FormFieldsStatus } from "../types/FormFieldsStatus";
 
 type Props = TextFieldProps & {
-  setFormFieldsStatus: React.Dispatch<React.SetStateAction<FormFieldsStatus>>;
+  setValidFields: React.Dispatch<React.SetStateAction<FormFieldsStatus>>;
   validationRules: Rule[];
 };
 
-const TextFieldWithValidation = ({ setFormFieldsStatus, validationRules, ...props }: Props) => {
+const TextFieldWithValidation = ({ setValidFields, validationRules, ...props }: Props) => {
   const [wasFocused, setWasFocused] = useState(false);
   const [errorLabel, setErrorLabel] = useState<undefined | string>(undefined);
 
@@ -23,7 +23,7 @@ const TextFieldWithValidation = ({ setFormFieldsStatus, validationRules, ...prop
       setErrorLabel(undefined);
     }
     setWasFocused(true);
-    setFormFieldsStatus((prev) => {
+    setValidFields((prev) => {
       return { ...prev, [props.name!]: inputStatus };
     });
   }

@@ -4,24 +4,23 @@ import TextFieldWithValidation from "./TextFieldWithValidation";
 import { validate } from "../utils/validateInputs";
 import { useState } from "react";
 import { FormFieldsStatus } from "../types/FormFieldsStatus";
+import { CustomerBasicInfos } from "../types/user";
 
-const FormUserBasicFields = ({ setBasicFieldsValid }) => {
-  const [customerData, setCustomerData] = useState({
-    email: "",
-    firstName: "",
-    lastName: "",
-    username: "",
-  });
-
-  const [customerDataStatus, setCustomerDataStatus] = useState<FormFieldsStatus>({
-    email: validate(customerData.email, formUserValidationRules.rules.email),
-    firstName: validate(customerData.firstName, formUserValidationRules.rules.firstName),
-    lastName: validate(customerData.lastName, formUserValidationRules.rules.lastName),
+interface Props {
+  setIsBasicDataValid: React.Dispatch<React.SetStateAction<boolean>>;
+  setBasicData: React.Dispatch<React.SetStateAction<CustomerBasicInfos>>;
+  basicData: CustomerBasicInfos;
+}
+const FormUserBasicFields = ({ setIsBasicDataValid, setBasicData, basicData }: Props) => {
+  const [validFields, setValidFields] = useState<FormFieldsStatus>({
+    email: validate(basicData.email, formUserValidationRules.rules.email),
+    firstName: validate(basicData.firstName, formUserValidationRules.rules.firstName),
+    lastName: validate(basicData.lastName, formUserValidationRules.rules.lastName),
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setCustomerData((prev) => ({ ...prev, [name]: value }));
+    setBasicData((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
@@ -33,10 +32,10 @@ const FormUserBasicFields = ({ setBasicFieldsValid }) => {
           label="Prénom"
           variant="outlined"
           fullWidth
-          value={customerData.firstName}
+          value={basicData.firstName}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e)}
           validationRules={formUserValidationRules.rules.firstName}
-          setFormFieldsStatus={setCustomerDataStatus}
+          setValidFields={setValidFields}
         />
       </Grid>
       <Grid item xs={12} md={4}>
@@ -46,10 +45,10 @@ const FormUserBasicFields = ({ setBasicFieldsValid }) => {
           label="Nom"
           variant="outlined"
           fullWidth
-          value={customerData.lastName}
+          value={basicData.lastName}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e)}
           validationRules={formUserValidationRules.rules.lastName}
-          setFormFieldsStatus={setCustomerDataStatus}
+          setValidFields={setValidFields}
         />
       </Grid>
       <Grid item xs={12} md={4}>
@@ -59,10 +58,10 @@ const FormUserBasicFields = ({ setBasicFieldsValid }) => {
           label="Email"
           variant="outlined"
           fullWidth
-          value={customerData.email}
+          value={basicData.email}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e)}
           validationRules={formUserValidationRules.rules.email}
-          setFormFieldsStatus={setCustomerDataStatus}
+          setValidFields={setValidFields}
         />
       </Grid>
     </>

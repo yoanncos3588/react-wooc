@@ -1,4 +1,4 @@
-import { BillingInfos, ShippingInfos } from "./billingShipping";
+import { LocationInfos } from "./billingShipping";
 
 export interface User {
   id: number;
@@ -9,6 +9,8 @@ export interface Customer extends Omit<User, "id"> {
   email: string;
   firstName: string;
   lastName: string;
-  billing: BillingInfos;
-  shipping: ShippingInfos;
+  billing: LocationInfos;
+  shipping: LocationInfos;
 }
+
+export interface CustomerBasicInfos extends Omit<Customer, "billing" | "shipping"> {}

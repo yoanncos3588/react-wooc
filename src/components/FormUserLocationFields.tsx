@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { Grid, TextField, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import SelectCountry from "./SelectCountry";
@@ -11,22 +11,10 @@ import { FormFieldsStatus } from "../types/FormFieldsStatus";
 interface Props {
   isBilling: boolean;
   setLocationFieldsValid: React.Dispatch<React.SetStateAction<boolean>>;
+  setLocationData: React.Dispatch<React.SetStateAction<LocationInfos>>;
+  locationData: LocationInfos;
 }
-const FormUserInfosFields = ({ isBilling, setLocationFieldsValid }: Props) => {
-  const [locationData, setLocationData] = useState<LocationInfos>({
-    firstName: "",
-    lastName: "",
-    company: "",
-    address_1: "",
-    address_2: "",
-    city: "",
-    state: "",
-    postcode: "",
-    country: "",
-    email: "",
-    phone: "",
-  });
-
+const FormUserLocationFields = ({ isBilling, setLocationFieldsValid, setLocationData, locationData }: Props) => {
   const [locationDataStatus, setLocationDataStatus] = useState<FormFieldsStatus>({
     locationFirstname: validate(locationData.firstName, formUserValidationRules.rules.locationFirstName),
     locationLastName: validate(locationData.lastName, formUserValidationRules.rules.locationLastName),
@@ -50,7 +38,7 @@ const FormUserInfosFields = ({ isBilling, setLocationFieldsValid }: Props) => {
         {validationRules ? (
           <TextFieldWithValidation
             id={`${formType}-${key}`}
-            name={key} // billingLastName or shippingLastName
+            name={key}
             label={label}
             variant="outlined"
             fullWidth
@@ -99,4 +87,4 @@ const FormUserInfosFields = ({ isBilling, setLocationFieldsValid }: Props) => {
   );
 };
 
-export default FormUserInfosFields;
+export default FormUserLocationFields;
