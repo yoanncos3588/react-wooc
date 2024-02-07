@@ -56,6 +56,7 @@ const FormUserBasicFields = ({ setIsBasicDataValid, setBasicData, basicData }: P
           value={basicData.firstName}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e)}
           inputStatus={basicDataInputStatus.firstName}
+          data-test-id="basicfirstName"
         />
       </Grid>
       <Grid item xs={12} md={4}>
@@ -68,6 +69,7 @@ const FormUserBasicFields = ({ setIsBasicDataValid, setBasicData, basicData }: P
           value={basicData.lastName}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e)}
           inputStatus={basicDataInputStatus.lastName}
+          data-test-id="basiclastName"
         />
       </Grid>
       <Grid item xs={12} md={4}>
@@ -80,6 +82,7 @@ const FormUserBasicFields = ({ setIsBasicDataValid, setBasicData, basicData }: P
           value={basicData.email}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e)}
           inputStatus={basicDataInputStatus.email}
+          data-test-id="basicemail"
         />
       </Grid>
     </>

@@ -12,16 +12,21 @@ interface Props {
   setData: React.Dispatch<React.SetStateAction<LocationInfos>>;
   selectedCountry: string;
   inputStatus?: InputStatus;
+  dataTestId?: string;
 }
 
-const SelectCountry = ({ id, setData, selectedCountry, inputStatus }: Props) => {
+const SelectCountry = ({ id, setData, selectedCountry, inputStatus, dataTestId }: Props) => {
   const { data } = useQuery(countriesQuery());
   const countries: Country[] = data?.data;
 
   const [inputValue, setInputValue] = useState<string>(getCountryByCode(selectedCountry)?.name ?? "");
 
   function getCountryByCode(countryCode: string): Country | null {
-    return countries.find((country) => country.code === countryCode) ?? null;
+    if (countries) {
+      return countries.find((country) => country.code === countryCode) ?? null;
+    } else {
+      return null;
+    }
   }
 
   function handleOnChange(value: Country | null) {
@@ -38,18 +43,21 @@ const SelectCountry = ({ id, setData, selectedCountry, inputStatus }: Props) => 
 
   return (
     <>
-      <Autocomplete
-        id={id}
-        value={getCountryByCode(selectedCountry)}
-        inputValue={inputValue}
-        options={countries}
-        getOptionLabel={(option) => option.name}
-        onInputChange={(e, newInputValue) => {
-          setInputValue(newInputValue);
-        }}
-        onChange={(e, value) => handleOnChange(value)}
-        renderInput={(params) => renderInput(params)}
-      />
+      {countries && (
+        <Autocomplete
+          id={id}
+          value={getCountryByCode(selectedCountry)}
+          inputValue={inputValue}
+          options={countries}
+          getOptionLabel={(option) => option.name}
+          onInputChange={(e, newInputValue) => {
+            setInputValue(newInputValue);
+          }}
+          onChange={(e, value) => handleOnChange(value)}
+          renderInput={(params) => renderInput(params)}
+          data-test-id={dataTestId}
+        />
+      )}
     </>
   );
 };

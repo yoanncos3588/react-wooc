@@ -63,6 +63,7 @@ const FormUserLocationFields = ({ isBilling, setLocationFieldsValid, setLocation
             value={locationData[key]}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e)}
             inputStatus={locationDataStatus[key]}
+            data-test-id={`${formType}${key}`}
           />
         ) : (
           <TextField
@@ -73,6 +74,7 @@ const FormUserLocationFields = ({ isBilling, setLocationFieldsValid, setLocation
             fullWidth
             value={locationData[key]}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e)}
+            data-test-id={`${formType}${key}`}
           />
         )}
       </Grid>
@@ -92,7 +94,13 @@ const FormUserLocationFields = ({ isBilling, setLocationFieldsValid, setLocation
       {generateFormTextInputs("CP", "postcode", undefined, 2)}
       {generateFormTextInputs("Ville", "city", undefined, 5)}
       <Grid item md={5} xs={12}>
-        <SelectCountry id={`${formType}-country`} setData={setLocationData} selectedCountry={locationData.country} inputStatus={locationDataStatus.country} />
+        <SelectCountry
+          id={`${formType}-country`}
+          setData={setLocationData}
+          selectedCountry={locationData.country}
+          inputStatus={locationDataStatus.country}
+          dataTestId={`${formType}country`}
+        />
       </Grid>
       {isBilling && (
         <>

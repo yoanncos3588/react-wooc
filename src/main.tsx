@@ -18,7 +18,7 @@ import SignupPage from "./routes/SignupPage";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { countriesLoader } from "./loader";
 
-export const queryClient = new QueryClient();
+const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {

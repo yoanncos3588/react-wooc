@@ -75,7 +75,7 @@ const FormUser = () => {
   return (
     <>
       {mutation.isPending && <Loading />}
-      <Box component="form" sx={{ mt: theme.spacing(8) }} onSubmit={handleOnSubmit}>
+      <Box component="form" sx={{ mt: theme.spacing(8) }} onSubmit={handleOnSubmit} data-test-id="form-user">
         <Grid container spacing={2}>
           <FormUserBasicFields setIsBasicDataValid={setIsBasicDataValid} setBasicData={setBasicData} basicData={basicData} />
           <FormUserLocationFields
@@ -94,12 +94,12 @@ const FormUser = () => {
           />
         </Grid>
         {mutation.isSuccess && (
-          <Alert icon={<CheckIcon fontSize="inherit" />} severity="success" variant="filled" sx={{ mt: theme.spacing(1) }}>
+          <Alert icon={<CheckIcon fontSize="inherit" />} severity="success" variant="filled" sx={{ mt: theme.spacing(1) }} data-test-id="alert-success">
             Votre compte a bien été créé, vous allez être redirigé…
           </Alert>
         )}
         {mutation.isError && (
-          <Alert icon={<CheckIcon fontSize="inherit" />} severity="error" variant="filled" sx={{ mt: theme.spacing(1) }}>
+          <Alert icon={<CheckIcon fontSize="inherit" />} severity="error" variant="filled" sx={{ mt: theme.spacing(1) }} data-test-id="alert-error">
             Une erreur est survenue : {mutation.error.message}
           </Alert>
         )}
@@ -109,6 +109,7 @@ const FormUser = () => {
           sx={{ mt: theme.spacing(4) }}
           disabled={!allValid || mutation.isPending || mutation.isSuccess}
           type="submit"
+          data-test-id="btn-send-data"
         >
           Créer mon compte
         </Button>
