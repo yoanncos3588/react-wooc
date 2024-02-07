@@ -1,5 +1,5 @@
 import Logo from "./Logo";
-import { useTheme } from "@mui/system";
+import { useTheme } from "@mui/material/styles";
 import { AppBar, Box, IconButton, Toolbar } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
