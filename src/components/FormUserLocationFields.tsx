@@ -35,6 +35,17 @@ const FormUserLocationFields = ({ isBilling, setLocationFieldsValid, setLocation
     updateInputStatus(locationData);
   }, [locationData, updateInputStatus]);
 
+  /** global validation for parent */
+  useEffect(() => {
+    setLocationFieldsValid(() => {
+      if (Object.values(locationDataStatus).every((obj) => obj.valid === true)) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+  });
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setLocationData((prev) => ({ ...prev, [name]: value }));

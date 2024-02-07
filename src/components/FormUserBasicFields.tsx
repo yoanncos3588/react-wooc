@@ -13,8 +13,8 @@ interface Props {
 const FormUserBasicFields = ({ setIsBasicDataValid, setBasicData, basicData }: Props) => {
   const [basicDataInputStatus, setBasicDataInputStatus] = useState<FormFieldsStatus>(formUserValidationRules.validBasicInput(basicData));
 
-  /* use useMemo (as useCallback) to keep debounce ref during re-rendering   */
-  /* https://stackoverflow.com/questions/69830440/react-hook-usecallback-received-a-function-whose-dependencies-are-unknown-pass */
+  /** use useMemo (as useCallback) to keep debounce ref during re-rendering   */
+  /** https://stackoverflow.com/questions/69830440/react-hook-usecallback-received-a-function-whose-dependencies-are-unknown-pass */
   const updateInputStatus = useMemo(
     () =>
       debounce((basicData) => {
@@ -23,10 +23,21 @@ const FormUserBasicFields = ({ setIsBasicDataValid, setBasicData, basicData }: P
     []
   );
 
-  /* update input status when data change */
+  /** update input status when data change */
   useEffect(() => {
     updateInputStatus(basicData);
   }, [basicData, updateInputStatus]);
+
+  /** global validation for parent */
+  useEffect(() => {
+    setIsBasicDataValid(() => {
+      if (Object.values(basicDataInputStatus).every((obj) => obj.valid === true)) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+  });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
