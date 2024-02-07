@@ -1,9 +1,8 @@
-import React, { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Grid, TextField, Typography, debounce } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import SelectCountry from "./SelectCountry";
 import TextFieldWithValidation from "./TextFieldWithValidation";
-import { Rule, validate } from "../utils/validateInputs";
 import formUserValidationRules from "../utils/formUserValidationRules";
 import { LocationInfos } from "../types/billingShipping";
 import { FormFieldsStatus } from "../types/FormFieldsStatus";
