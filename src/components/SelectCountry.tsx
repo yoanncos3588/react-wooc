@@ -1,17 +1,20 @@
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, AutocompleteRenderInputParams, TextField } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Country } from "../types/locations";
 import { countriesQuery } from "../queries";
 import { LocationInfos } from "../types/billingShipping";
+import { InputStatus } from "../utils/validateInputs";
+import TextFieldWithValidation from "./TextFieldWithValidation";
 
 interface Props {
   id: string;
   setData: React.Dispatch<React.SetStateAction<LocationInfos>>;
   selectedCountry: string;
+  inputStatus?: InputStatus;
 }
 
-const SelectCountry = ({ id, setData, selectedCountry }: Props) => {
+const SelectCountry = ({ id, setData, selectedCountry, inputStatus }: Props) => {
   const { data } = useQuery(countriesQuery());
   const countries: Country[] = data?.data;
 
@@ -23,6 +26,14 @@ const SelectCountry = ({ id, setData, selectedCountry }: Props) => {
 
   function handleOnChange(value: Country | null) {
     setData((prev) => ({ ...prev, country: value ? value.code : "" }));
+  }
+
+  function renderInput(params: AutocompleteRenderInputParams) {
+    if (inputStatus !== undefined) {
+      return <TextFieldWithValidation {...params} label="Pays" inputStatus={inputStatus} />;
+    } else {
+      return <TextField {...params} label="Pays" />;
+    }
   }
 
   return (
@@ -37,7 +48,7 @@ const SelectCountry = ({ id, setData, selectedCountry }: Props) => {
           setInputValue(newInputValue);
         }}
         onChange={(e, value) => handleOnChange(value)}
-        renderInput={(params) => <TextField {...params} label="Pays" />}
+        renderInput={(params) => renderInput(params)}
       />
     </>
   );

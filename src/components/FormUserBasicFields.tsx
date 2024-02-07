@@ -1,8 +1,7 @@
-import { Grid } from "@mui/material";
+import { Grid, debounce } from "@mui/material";
 import formUserValidationRules from "../utils/formUserValidationRules";
 import TextFieldWithValidation from "./TextFieldWithValidation";
-import { validate } from "../utils/validateInputs";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FormFieldsStatus } from "../types/FormFieldsStatus";
 import { CustomerBasicInfos } from "../types/user";
 
@@ -12,11 +11,22 @@ interface Props {
   basicData: CustomerBasicInfos;
 }
 const FormUserBasicFields = ({ setIsBasicDataValid, setBasicData, basicData }: Props) => {
-  const [validFields, setValidFields] = useState<FormFieldsStatus>({
-    email: validate(basicData.email, formUserValidationRules.rules.email),
-    firstName: validate(basicData.firstName, formUserValidationRules.rules.firstName),
-    lastName: validate(basicData.lastName, formUserValidationRules.rules.lastName),
-  });
+  const [basicDataInputStatus, setBasicDataInputStatus] = useState<FormFieldsStatus>(formUserValidationRules.validBasicInput(basicData));
+
+  /* use useMemo (as useCallback) to keep debounce ref during re-rendering   */
+  /* https://stackoverflow.com/questions/69830440/react-hook-usecallback-received-a-function-whose-dependencies-are-unknown-pass */
+  const updateInputStatus = useMemo(
+    () =>
+      debounce((basicData) => {
+        setBasicDataInputStatus(formUserValidationRules.validBasicInput(basicData));
+      }, 200),
+    []
+  );
+
+  /* update input status when data change */
+  useEffect(() => {
+    updateInputStatus(basicData);
+  }, [basicData, updateInputStatus]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -34,8 +44,7 @@ const FormUserBasicFields = ({ setIsBasicDataValid, setBasicData, basicData }: P
           fullWidth
           value={basicData.firstName}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e)}
-          validationRules={formUserValidationRules.rules.firstName}
-          setValidFields={setValidFields}
+          inputStatus={basicDataInputStatus.firstName}
         />
       </Grid>
       <Grid item xs={12} md={4}>
@@ -47,8 +56,7 @@ const FormUserBasicFields = ({ setIsBasicDataValid, setBasicData, basicData }: P
           fullWidth
           value={basicData.lastName}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e)}
-          validationRules={formUserValidationRules.rules.lastName}
-          setValidFields={setValidFields}
+          inputStatus={basicDataInputStatus.lastName}
         />
       </Grid>
       <Grid item xs={12} md={4}>
@@ -60,8 +68,7 @@ const FormUserBasicFields = ({ setIsBasicDataValid, setBasicData, basicData }: P
           fullWidth
           value={basicData.email}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e)}
-          validationRules={formUserValidationRules.rules.email}
-          setValidFields={setValidFields}
+          inputStatus={basicDataInputStatus.email}
         />
       </Grid>
     </>
