@@ -4,11 +4,13 @@ import CryptoJS from "crypto-js";
 import category from "./category";
 import product from "./product";
 import country from "./country";
+import customer from "./customer";
 
 export const api = {
   category,
   product,
   country,
+  customer,
 };
 
 export const axiosInstanceWoo = axios.create({
