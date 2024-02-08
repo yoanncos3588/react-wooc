@@ -1,6 +1,6 @@
 import { Alert, Box, Button, Grid } from "@mui/material";
 import theme from "../theme";
-import { FormEvent, useState } from "react";
+import { FormEvent } from "react";
 import FormUserLocationFields from "./FormUserLocationFields";
 import FormUserBasicFields from "./FormUserBasicFields";
 import { LocationInfos } from "../types/billingShipping";
@@ -8,51 +8,10 @@ import { Customer, CustomerBasicInfos } from "../types/user";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "../services/api/api";
 import Loading from "./Loading";
-import CheckIcon from "@mui/icons-material/Check";
 import { useNavigate } from "react-router-dom";
+import formUserValidationRules from "../utils/formUserValidationRules";
 
 const FormUser = () => {
-  const [isBasicDataValid, setIsBasicDataValid] = useState(false);
-  const [isShippingDataValid, setIsShippingDataValid] = useState(false);
-  const [isBillingDataValid, setIsBillingDataValid] = useState(false);
-
-  const allValid = Boolean(isBasicDataValid && isShippingDataValid && isBillingDataValid);
-
-  const [basicData, setBasicData] = useState<CustomerBasicInfos>({
-    email: "",
-    firstName: "",
-    lastName: "",
-    username: "",
-  });
-
-  const [billingData, setBillingData] = useState<LocationInfos>({
-    firstName: "",
-    lastName: "",
-    company: "",
-    address_1: "",
-    address_2: "",
-    city: "",
-    state: "",
-    postcode: "",
-    country: "",
-    email: "",
-    phone: "",
-  });
-
-  const [shippingData, setShippingData] = useState<LocationInfos>({
-    firstName: "",
-    lastName: "",
-    company: "",
-    address_1: "",
-    address_2: "",
-    city: "",
-    state: "",
-    postcode: "",
-    country: "",
-    email: "",
-    phone: "",
-  });
-
   const navigate = useNavigate();
 
   const mutation = useMutation({
@@ -66,9 +25,42 @@ const FormUser = () => {
 
   function handleOnSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (allValid) {
-      const customer: Customer = { ...basicData, username: basicData.firstName + " " + basicData.lastName, billing: billingData, shipping: shippingData };
-      mutation.mutate(customer);
+    const formData = new FormData(e.currentTarget);
+
+    const regex = /^(shipping|billing)(.*)/i;
+
+    const basicData = {} as { [key: string]: string };
+    const billingData = {} as { [key: string]: string };
+    const shippingData = {} as { [key: string]: string };
+
+    // sort keys and create data objects
+    for (const pair of formData.entries()) {
+      // pair[0] is the name of the field, pair[1] is the value
+      const key = pair[0];
+      const matches = regex.exec(key); // output ex ['billingphone', 'billing', 'phone'];
+
+      if (matches) {
+        // key start with billing or shipping
+        const prefix = matches[1];
+        const remaining = matches[2];
+        if (prefix.toLowerCase() === "shipping") {
+          shippingData[remaining as keyof LocationInfos] = pair[1] as string;
+        } else {
+          billingData[remaining as keyof LocationInfos] = pair[1] as string;
+        }
+      } else {
+        // key dont start with billing or shipping, so it's basic data
+        basicData[key] = pair[1] as string;
+      }
+    }
+
+    // carreful with type
+    const isBasicValid = formUserValidationRules.validBasicData(basicData as CustomerBasicInfos);
+    const isBillingValid = formUserValidationRules.validLocationData(billingData as unknown as LocationInfos);
+    const isShippingValid = formUserValidationRules.validLocationData(shippingData as unknown as LocationInfos);
+
+    if (isBasicValid && isBillingValid && isShippingValid) {
+      mutation.mutate({ ...basicData, billing: billingData, shipping: shippingData } as unknown as Customer);
     }
   }
 
@@ -77,29 +69,17 @@ const FormUser = () => {
       {mutation.isPending && <Loading />}
       <Box component="form" sx={{ mt: theme.spacing(8) }} onSubmit={handleOnSubmit} data-test-id="form-user">
         <Grid container spacing={2}>
-          <FormUserBasicFields setIsBasicDataValid={setIsBasicDataValid} setBasicData={setBasicData} basicData={basicData} />
-          <FormUserLocationFields
-            isBilling={false}
-            setLocationFieldsValid={setIsShippingDataValid}
-            locationData={shippingData}
-            setLocationData={setShippingData}
-            key={"shippingFields"}
-          />
-          <FormUserLocationFields
-            isBilling={true}
-            setLocationFieldsValid={setIsBillingDataValid}
-            setLocationData={setBillingData}
-            locationData={billingData}
-            key={"billingFields"}
-          />
+          <FormUserBasicFields />
+          <FormUserLocationFields isBilling={false} key={"shippingFields"} />
+          <FormUserLocationFields isBilling={true} key={"billingFields"} />
         </Grid>
         {mutation.isSuccess && (
-          <Alert icon={<CheckIcon fontSize="inherit" />} severity="success" variant="filled" sx={{ mt: theme.spacing(1) }} data-test-id="alert-success">
+          <Alert severity="success" variant="filled" sx={{ mt: theme.spacing(1) }} data-test-id="alert-success">
             Votre compte a bien été créé, vous allez être redirigé…
           </Alert>
         )}
         {mutation.isError && (
-          <Alert icon={<CheckIcon fontSize="inherit" />} severity="error" variant="filled" sx={{ mt: theme.spacing(1) }} data-test-id="alert-error">
+          <Alert severity="error" variant="filled" sx={{ mt: theme.spacing(1) }} data-test-id="alert-error">
             Une erreur est survenue : {mutation.error.message}
           </Alert>
         )}
@@ -107,7 +87,7 @@ const FormUser = () => {
           variant="contained"
           color="success"
           sx={{ mt: theme.spacing(4) }}
-          disabled={!allValid || mutation.isPending || mutation.isSuccess}
+          disabled={mutation.isPending || mutation.isSuccess}
           type="submit"
           data-test-id="btn-send-data"
         >

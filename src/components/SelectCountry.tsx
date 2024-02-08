@@ -1,63 +1,40 @@
-import { Autocomplete, AutocompleteRenderInputParams, TextField } from "@mui/material";
+import { Autocomplete, TextField, TextFieldProps } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Country } from "../types/locations";
 import { countriesQuery } from "../queries";
-import { LocationInfos } from "../types/billingShipping";
-import { InputStatus } from "../utils/validateInputs";
 import TextFieldWithValidation from "./TextFieldWithValidation";
+import { Rule } from "../utils/validateInputs";
 
-interface Props {
-  id: string;
-  setData: React.Dispatch<React.SetStateAction<LocationInfos>>;
-  selectedCountry: string;
-  inputStatus?: InputStatus;
-  dataTestId?: string;
-}
+type Props = TextFieldProps & {
+  validationRules: Rule[];
+};
 
-const SelectCountry = ({ id, setData, selectedCountry, inputStatus, dataTestId }: Props) => {
+const SelectCountry = ({ validationRules, ...props }: Props) => {
   const { data } = useQuery(countriesQuery());
   const countries: Country[] = data?.data;
 
-  const [inputValue, setInputValue] = useState<string>(getCountryByCode(selectedCountry)?.name ?? "");
-
-  function getCountryByCode(countryCode: string): Country | null {
-    if (countries) {
-      return countries.find((country) => country.code === countryCode) ?? null;
-    } else {
-      return null;
-    }
-  }
-
-  function handleOnChange(value: Country | null) {
-    setData((prev) => ({ ...prev, country: value ? value.code : "" }));
-  }
-
-  function renderInput(params: AutocompleteRenderInputParams) {
-    if (inputStatus !== undefined) {
-      return <TextFieldWithValidation {...params} label="Pays" inputStatus={inputStatus} />;
-    } else {
-      return <TextField {...params} label="Pays" />;
-    }
-  }
+  const [dataValue, setDataValue] = useState<Country | null>(null);
+  const [countryCode, setCountryCode] = useState<string>("");
+  const [inputValue, setInputValue] = useState<string>("");
 
   return (
     <>
-      {countries && (
-        <Autocomplete
-          id={id}
-          value={getCountryByCode(selectedCountry)}
-          inputValue={inputValue}
-          options={countries}
-          getOptionLabel={(option) => option.name}
-          onInputChange={(e, newInputValue) => {
-            setInputValue(newInputValue);
-          }}
-          onChange={(e, value) => handleOnChange(value)}
-          renderInput={(params) => renderInput(params)}
-          data-test-id={dataTestId}
-        />
-      )}
+      <Autocomplete
+        value={dataValue}
+        inputValue={inputValue}
+        options={countries}
+        getOptionLabel={(option) => option.name}
+        onInputChange={(e, newInputValue) => {
+          setInputValue(newInputValue);
+        }}
+        onChange={(e, value) => {
+          setDataValue(value);
+          setCountryCode(value ? value?.code : "");
+        }}
+        renderInput={(params) => <TextFieldWithValidation {...params} label="Pays" value={inputValue} validationRules={validationRules} />}
+      />
+      <TextField sx={{ display: "none" }} value={countryCode} name={props.name} />
     </>
   );
 };

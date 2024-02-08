@@ -1,17 +1,18 @@
 import { LocationInfos } from "../types/billingShipping";
 import { CustomerBasicInfos } from "../types/user";
-import { InputStatus, Rule, isEmailValid, isRequired, minMaxLength, validate } from "./validateInputs";
+import { Rule, isEmailValid, isRequired, minMaxLength, validate } from "./validateInputs";
 
 interface Type {
   rules: {
-    [key: string]: Rule[];
+    basic: {
+      [key: string]: Rule[];
+    };
+    location: {
+      [key: string]: Rule[];
+    };
   };
-  validBasicInput: (basicData: CustomerBasicInfos) => {
-    [key: string]: InputStatus;
-  };
-  validLocationInput: (locationData: LocationInfos) => {
-    [key: string]: InputStatus;
-  };
+  validBasicData: (basicData: CustomerBasicInfos) => boolean;
+  validLocationData: (locationData: LocationInfos) => boolean;
   mockedData: mockedDataFormUser;
 }
 
@@ -39,33 +40,58 @@ export type mockedDataFormUser = {
 
 const formUserValidationRules: Type = {
   rules: {
-    email: [isRequired, isEmailValid],
-    firstName: [isRequired, minMaxLength({ min: 1, max: 25 })],
-    lastName: [isRequired, minMaxLength({ min: 1, max: 25 })],
-    locationFirstName: [isRequired, minMaxLength({ min: 1, max: 25 })],
-    locationLastName: [isRequired, minMaxLength({ min: 1, max: 25 })],
-    locationAddress_1: [isRequired, minMaxLength({ min: 1, max: 50 })],
-    locationCity: [isRequired, minMaxLength({ min: 1, max: 50 })],
-    locationPostcode: [isRequired, minMaxLength({ min: 1, max: 10 })],
-    locationCountry: [isRequired],
+    basic: {
+      email: [isRequired, isEmailValid],
+      firstName: [isRequired, minMaxLength({ min: 1, max: 25 })],
+      lastName: [isRequired, minMaxLength({ min: 1, max: 25 })],
+    },
+    location: {
+      firstName: [isRequired, minMaxLength({ min: 1, max: 25 })],
+      lastName: [isRequired, minMaxLength({ min: 1, max: 25 })],
+      address_1: [isRequired, minMaxLength({ min: 1, max: 50 })],
+      city: [isRequired, minMaxLength({ min: 1, max: 50 })],
+      postcode: [isRequired, minMaxLength({ min: 1, max: 10 })],
+      country: [isRequired],
+    },
   },
-  validBasicInput: (basicData: CustomerBasicInfos) => {
-    return {
-      email: validate(basicData.email, formUserValidationRules.rules.email),
-      firstName: validate(basicData.firstName, formUserValidationRules.rules.firstName),
-      lastName: validate(basicData.lastName, formUserValidationRules.rules.lastName),
-    };
+  /**
+   * valid basic value based on validations rules
+   * @param basicData
+   * @returns {boolean}
+   */
+  validBasicData: (basicData: CustomerBasicInfos): boolean => {
+    let isValid = true;
+    for (const key in basicData) {
+      if (key in formUserValidationRules.rules.location) {
+        const inputStatus = validate(basicData[key as keyof CustomerBasicInfos], formUserValidationRules.rules.basic[key]);
+        if (!inputStatus.valid) {
+          isValid = false;
+          break;
+        }
+      }
+    }
+    return isValid;
   },
-  validLocationInput: (locationData: LocationInfos) => {
-    return {
-      firstName: validate(locationData.firstName, formUserValidationRules.rules.locationFirstName),
-      lastName: validate(locationData.lastName, formUserValidationRules.rules.locationLastName),
-      address_1: validate(locationData.address_1, formUserValidationRules.rules.locationAddress_1),
-      city: validate(locationData.city, formUserValidationRules.rules.locationCity),
-      postcode: validate(locationData.postcode, formUserValidationRules.rules.locationPostcode),
-      country: validate(locationData.country, formUserValidationRules.rules.locationCountry),
-    };
+
+  /**
+   * valid location value based on validations rules
+   * @param locationData
+   * @returns {boolean}
+   */
+  validLocationData: (locationData: LocationInfos): boolean => {
+    let isValid = true;
+    for (const key in locationData) {
+      if (key in formUserValidationRules.rules.location) {
+        const inputStatus = validate(locationData[key as keyof LocationInfos], formUserValidationRules.rules.location[key]);
+        if (!inputStatus.valid) {
+          isValid = false;
+          break;
+        }
+      }
+    }
+    return isValid;
   },
+
   mockedData: {
     basicemail: "cy@test.fr",
     basicfirstName: "cypress",
