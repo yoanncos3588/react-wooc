@@ -14,7 +14,7 @@ const customer = {
    * Retrieve jwt
    * https://fr.wordpress.org/plugins/jwt-authentication-for-wp-rest-api/
    */
-  login: async (username: string, password: string) => {
+  login: async ({ username, password }: { username: string; password: string }) => {
     return await axiosInstanceWp.post("/jwt-auth/v1/token/", { username, password });
   },
   /**

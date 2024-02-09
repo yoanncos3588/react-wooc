@@ -1,4 +1,4 @@
-import { isRequired, isEmailValid } from "./rules";
+import { isRequired } from "./rules";
 import { Rule } from "./validation";
 
 interface Type {
@@ -6,7 +6,7 @@ interface Type {
 }
 
 const user: Type = {
-  email: [isRequired, isEmailValid],
+  username: [isRequired],
   password: [isRequired],
 };
 
