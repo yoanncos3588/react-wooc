@@ -1,4 +1,5 @@
-import { Rule, isEmailValid, isRequired, minMaxLength } from "../../utils/validateInputs";
+import { isRequired, isEmailValid, minMaxLength } from "./rules";
+import { Rule } from "./validation";
 
 interface Type {
   basic: {

@@ -1,11 +1,5 @@
+import { InputStatus, Rule } from "./validation";
 import * as EmailValidator from "email-validator";
-
-export interface InputStatus {
-  valid: boolean;
-  error?: string;
-}
-
-export type Rule = (value: string) => InputStatus;
 
 export function isRequired(value: string): InputStatus {
   const valid = Boolean(value);
@@ -30,17 +24,5 @@ export function minMaxLength({ min, max }: { min: number; max: number }): Rule {
       valid,
       error: valid ? undefined : `${min} caractères min / ${max} caractères max`,
     };
-  };
-}
-
-export function validate(value: string, rules: Rule[]): InputStatus {
-  for (const rule of rules) {
-    const result = rule(value);
-    if (!result.valid) {
-      return result;
-    }
-  }
-  return {
-    valid: true,
   };
 }

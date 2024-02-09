@@ -2,9 +2,8 @@ import { Grid, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import TextFieldWithValidation from "./TextFieldWithValidation";
 import { LocationInfos } from "../types/billingShipping";
-import { Rule } from "../utils/validateInputs";
 import SelectCountry from "./SelectCountry";
-import validation from "../services/validation/validation";
+import validation, { Rule } from "../services/validation/validation";
 
 interface Props {
   isBilling: boolean;

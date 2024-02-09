@@ -1,6 +1,6 @@
 import { TextField, TextFieldProps } from "@mui/material";
 import { useState } from "react";
-import { Rule, validate } from "../utils/validateInputs";
+import validation, { Rule } from "../services/validation/validation";
 
 type Props = TextFieldProps & {
   validationRules?: Rule[];
@@ -11,7 +11,7 @@ const TextFieldWithValidation = ({ validationRules, ...props }: Props) => {
   const [wasFocused, setWasFocused] = useState(false);
 
   const isRequired = validationRules !== undefined;
-  const errorLabel = isRequired ? validate(props.value ? (props.value as string) : (inputValue as string), validationRules) : null;
+  const errorLabel = isRequired ? validation.validInput(props.value ? (props.value as string) : (inputValue as string), validationRules) : null;
   return (
     <TextField
       {...props}

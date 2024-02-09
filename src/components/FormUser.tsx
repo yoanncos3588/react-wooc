@@ -4,7 +4,7 @@ import { FormEvent } from "react";
 import FormUserLocationFields from "./FormUserLocationFields";
 import FormUserBasicFields from "./FormUserBasicFields";
 import { LocationInfos } from "../types/billingShipping";
-import { Customer, CustomerBasicInfos } from "../types/user";
+import { Customer } from "../types/user";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "../services/api/api";
 import Loading from "./Loading";

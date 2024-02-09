@@ -1,4 +1,5 @@
-import { Rule, isEmailValid, isRequired } from "../../utils/validateInputs";
+import { isRequired, isEmailValid } from "./rules";
+import { Rule } from "./validation";
 
 interface Type {
   [key: string]: Rule[];

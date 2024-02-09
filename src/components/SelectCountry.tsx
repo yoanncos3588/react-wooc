@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Country } from "../types/locations";
 import { countriesQuery } from "../queries";
 import TextFieldWithValidation from "./TextFieldWithValidation";
-import { Rule } from "../utils/validateInputs";
+import { Rule } from "../services/validation/validation";
 
 type Props = TextFieldProps & {
   validationRules: Rule[];
