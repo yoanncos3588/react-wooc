@@ -7,6 +7,7 @@ import Container from "@mui/material/Container";
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import { CircularProgress } from "@mui/material";
+import { api } from "../services/api/api";
 
 const Root = () => {
   const theme = useTheme();
@@ -19,6 +20,8 @@ const Root = () => {
     }
     setDrawerOpen((prevState) => !prevState);
   };
+
+  // const test = api.customer.get();
 
   return (
     <>

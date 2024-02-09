@@ -18,14 +18,17 @@ import SignupPage from "./routes/SignupPage";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { countriesLoader } from "./loader";
 import LoginPage from "./routes/LoginPage";
+import { RouteProtected } from "./components/RouteProtected";
+import AuthProvider from "./context/AuthContext";
+import { RouteForGuestOnly } from "./components/RouteForGuestOnly";
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
-    errorElement: <ErrorPage />,
+    // errorElement: <ErrorPage />,
     children: [
       {
         path: "signup",
@@ -34,11 +37,19 @@ const router = createBrowserRouter([
       },
       {
         path: "login",
-        element: <LoginPage />,
+        element: (
+          <RouteForGuestOnly>
+            <LoginPage />
+          </RouteForGuestOnly>
+        ),
       },
       {
-        path: "category/:categoryId",
-        element: <CategoryPage />,
+        path: "private",
+        element: (
+          <RouteProtected>
+            <CategoryPage />
+          </RouteProtected>
+        ),
       },
       {
         path: "product/:categoryId",
@@ -54,7 +65,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <RouterProvider router={router} />
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </ThemeProvider>
     </QueryClientProvider>

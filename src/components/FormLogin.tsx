@@ -7,13 +7,16 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { FormEvent } from "react";
 import Loading from "./Loading";
+import { useAuth } from "../hooks/useAuth";
 
 const FormLogin = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const mutation = useMutation({
     mutationFn: ({ username, password }: { username: string; password: string }) => api.customer.login({ username, password }),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      login && login(data);
       setTimeout(() => {
         navigate("/");
       }, 3000);
