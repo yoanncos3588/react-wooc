@@ -17,6 +17,7 @@ import Root from "./routes/Root";
 import SignupPage from "./routes/SignupPage";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { countriesLoader } from "./loader";
+import LoginPage from "./routes/LoginPage";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
         path: "signup",
         element: <SignupPage />,
         loader: countriesLoader(queryClient),
+      },
+      {
+        path: "login",
+        element: <LoginPage />,
       },
       {
         path: "category/:categoryId",
