@@ -1,11 +1,11 @@
 import "../cypress/commands";
+import mock from "../services/mock/mock";
 import FormUser from "./FormUser";
-import formUserValidationRules, { mockedDataFormUser } from "../utils/formUserValidationRules";
 
 const buttonSend = "[data-test-id='btn-send-data']";
 
 function populateForm() {
-  for (const key in formUserValidationRules.mockedData) {
+  for (const key in mock.user.complete) {
     if (key === "billingcountry" || key === "shippingcountry") {
       cy.get(`[data-test-id='${key}']`).click();
       cy.contains("France").then((li) => {
@@ -14,9 +14,7 @@ function populateForm() {
         }
       });
     } else {
-      cy.get(`[data-test-id='${key}']`)
-        .find("input")
-        .type(formUserValidationRules.mockedData[key as keyof mockedDataFormUser]);
+      cy.get(`[data-test-id='${key}']`).find("input").type(mock.user.complete[key]);
     }
   }
 }

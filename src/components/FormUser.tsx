@@ -9,7 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import { api } from "../services/api/api";
 import Loading from "./Loading";
 import { useNavigate } from "react-router-dom";
-import formUserValidationRules from "../utils/formUserValidationRules";
+import validation from "../services/validation/validation";
 
 const FormUser = () => {
   const navigate = useNavigate();
@@ -55,9 +55,9 @@ const FormUser = () => {
     }
 
     // carreful with type
-    const isBasicValid = formUserValidationRules.validBasicData(basicData as CustomerBasicInfos);
-    const isBillingValid = formUserValidationRules.validLocationData(billingData as unknown as LocationInfos);
-    const isShippingValid = formUserValidationRules.validLocationData(shippingData as unknown as LocationInfos);
+    const isBasicValid = validation.validData(basicData, validation.rules.user.basic);
+    const isBillingValid = validation.validData(billingData, validation.rules.user.location);
+    const isShippingValid = validation.validData(shippingData, validation.rules.user.location);
 
     if (isBasicValid && isBillingValid && isShippingValid) {
       mutation.mutate({ ...basicData, billing: billingData, shipping: shippingData } as unknown as Customer);
