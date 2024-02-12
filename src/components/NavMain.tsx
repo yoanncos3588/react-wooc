@@ -1,20 +1,18 @@
 import { Button } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import StyledNavMain from "../styled/NavMain";
-import { useAuth } from "../hooks/useAuth";
 
 const NavMain = () => {
-  const { logout } = useAuth();
   return (
     <StyledNavMain>
       <Button component={RouterLink} variant="text" sx={{ color: "white" }} to="/">
         Menu 1
       </Button>
       <Button component={RouterLink} variant="text" sx={{ color: "white" }} to="/">
-        Menu 1
+        Menu 2
       </Button>
-      <Button variant="text" sx={{ color: "white" }} onClick={logout}>
-        logout
+      <Button component={RouterLink} variant="text" sx={{ color: "white" }} to="/">
+        Menu 3
       </Button>
       <Button component={RouterLink} variant="text" sx={{ color: "white" }} to="/private">
         private

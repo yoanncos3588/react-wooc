@@ -1,37 +1,39 @@
-import { Avatar, Box, Button, Divider, ListItemIcon, MenuItem } from "@mui/material";
+import { Box, Button, Divider, ListItemIcon, MenuItem } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import Settings from "@mui/icons-material/Settings";
 import HistoryIcon from "@mui/icons-material/History";
 import Logout from "@mui/icons-material/Logout";
+import { useTheme } from "@mui/material/styles";
 
 const NavAccount = () => {
   const { user, logout } = useAuth();
+  const theme = useTheme();
+
+  const menuItemSx = { pl: 0, [theme.breakpoints.up("md")]: { pl: theme.spacing(2) } };
   return (
     <>
       {user ? (
         <>
-          <Box>
-            <MenuItem>
-              <ListItemIcon>
-                <Settings fontSize="small" />
-              </ListItemIcon>
-              Mes informations
-            </MenuItem>
-            <MenuItem>
-              <ListItemIcon>
-                <HistoryIcon fontSize="small" />
-              </ListItemIcon>
-              Mes commandes
-            </MenuItem>
-            <Divider />
-            <MenuItem onClick={logout}>
-              <ListItemIcon>
-                <Logout fontSize="small" />
-              </ListItemIcon>
-              Se déconnecter
-            </MenuItem>
-          </Box>
+          <MenuItem sx={{ ...menuItemSx }}>
+            <ListItemIcon>
+              <Settings fontSize="small" />
+            </ListItemIcon>
+            Mes informations
+          </MenuItem>
+          <MenuItem sx={{ ...menuItemSx }}>
+            <ListItemIcon>
+              <HistoryIcon fontSize="small" />
+            </ListItemIcon>
+            Mes commandes
+          </MenuItem>
+          <Divider />
+          <MenuItem onClick={logout} sx={{ ...menuItemSx }}>
+            <ListItemIcon>
+              <Logout fontSize="small" />
+            </ListItemIcon>
+            Se déconnecter
+          </MenuItem>
         </>
       ) : (
         <>

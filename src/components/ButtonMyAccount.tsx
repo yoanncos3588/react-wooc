@@ -1,5 +1,5 @@
 import { useTheme } from "@mui/material/styles";
-import { Avatar, Button, IconButton, Menu } from "@mui/material";
+import { Avatar, Button, IconButton, Menu, Typography } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import NavAccount from "./NavAccount";
 import { useState } from "react";
@@ -32,8 +32,11 @@ const ButtonMyAccount = () => {
     <>
       {user ? (
         <>
-          <Button {...commonButtonProps} sx={{ color: "white", display: "none", ...showUpMd(theme, "flex") }}>
-            <Avatar sx={{ mr: theme.spacing(1) }} /> {user.username}
+          <Button {...commonButtonProps} sx={{ color: "white" }}>
+            <Avatar sx={{ mr: theme.spacing(1) }} />{" "}
+            <Typography sx={{ display: "none", ...showUpMd(theme, "flex") }} variant="caption">
+              {user.username}
+            </Typography>
           </Button>
         </>
       ) : (
