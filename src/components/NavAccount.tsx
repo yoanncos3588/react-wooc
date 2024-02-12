@@ -6,11 +6,14 @@ import HistoryIcon from "@mui/icons-material/History";
 import Logout from "@mui/icons-material/Logout";
 import { useTheme } from "@mui/material/styles";
 
-const NavAccount = () => {
+interface Props {
+  showInDrawer?: boolean;
+}
+const NavAccount = ({ showInDrawer = false }: Props) => {
   const { user, logout } = useAuth();
   const theme = useTheme();
 
-  const menuItemSx = { pl: 0, [theme.breakpoints.up("md")]: { pl: theme.spacing(2) } };
+  const menuItemSx = { pl: showInDrawer ? 0 : theme.spacing(2), [theme.breakpoints.up("md")]: { pl: theme.spacing(2) } };
   return (
     <>
       {user ? (

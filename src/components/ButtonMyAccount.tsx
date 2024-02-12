@@ -33,7 +33,7 @@ const ButtonMyAccount = () => {
       {user ? (
         <>
           <Button {...commonButtonProps} sx={{ color: "white" }}>
-            <Avatar sx={{ mr: theme.spacing(1) }} />{" "}
+            <Avatar sx={{ mr: 0, [theme.breakpoints.up("md")]: { mr: 1 } }} />{" "}
             <Typography sx={{ display: "none", ...showUpMd(theme, "flex") }} variant="caption">
               {user.username}
             </Typography>
