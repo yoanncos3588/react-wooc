@@ -38,6 +38,18 @@ const validation = {
    * @returns {boolean}
    */
   validData: (data: { [key: string]: string }, rules: { [key: string]: Rule[] }) => {
+    // test if obj is non empty and is an obj
+    if (data.constructor.name !== "Object" || (Object.keys(data).length === 0 && data.constructor === Object)) {
+      return false;
+    }
+    // test if obj has all the key rules
+    for (const keyRules in rules) {
+      if (!(keyRules in data)) {
+        console.log(keyRules);
+        return false;
+      }
+    }
+    // valid data
     for (const key in data) {
       if (key in rules) {
         const inputStatus = validation.validInput(data[key], rules[key]);
