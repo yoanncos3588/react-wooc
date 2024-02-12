@@ -1,13 +1,16 @@
 import { useTheme } from "@mui/material/styles";
-import { Button, IconButton, Menu } from "@mui/material";
+import { Avatar, Button, IconButton, Menu } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import NavAccount from "./NavAccount";
 import { useState } from "react";
 import { hideUpMd, showUpMd } from "../styled/utils";
+import { useAuth } from "../hooks/useAuth";
 
 const ButtonMyAccount = () => {
-  const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const theme = useTheme();
+  const { user } = useAuth();
 
   const open = Boolean(anchorEl);
 
@@ -17,33 +20,39 @@ const ButtonMyAccount = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const commonButtonProps = {
+    onClick: handleClick,
+    "aria-controls": open ? "basic-menu" : undefined,
+    "aria-haspopup": true,
+    "aria-expanded": open ? true : undefined,
+  };
+
   return (
     <>
-      <Button
-        startIcon={<PersonIcon />}
-        sx={{ color: "white", display: "none", ...showUpMd(theme, "flex") }}
-        aria-controls={open ? "basic-menu" : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
-        onClick={handleClick}
-      >
-        Mon compte
-      </Button>
-      <IconButton
-        size="large"
-        sx={{ px: 2, ...hideUpMd(theme) }}
-        aria-controls={open ? "basic-menu" : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
-        onClick={handleClick}
-      >
-        <PersonIcon />
-      </IconButton>
+      {user ? (
+        <>
+          <Button {...commonButtonProps} sx={{ color: "white", display: "none", ...showUpMd(theme, "flex") }}>
+            <Avatar sx={{ mr: theme.spacing(1) }} /> {user.username}
+          </Button>
+        </>
+      ) : (
+        <>
+          <Button startIcon={<PersonIcon />} sx={{ color: "white", display: "none", ...showUpMd(theme, "flex") }} {...commonButtonProps}>
+            Mon compte
+          </Button>
+          <IconButton size="large" sx={{ px: 2, ...hideUpMd(theme) }} {...commonButtonProps}>
+            <PersonIcon />
+          </IconButton>
+        </>
+      )}
+
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
+        onClick={handleClose}
         MenuListProps={{
           "aria-labelledby": "basic-button",
         }}
