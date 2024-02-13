@@ -13,7 +13,7 @@ const NavMain = () => {
       {data &&
         data.data.map((category: ProductCategorie) => (
           <StyledNavMain key={category.id}>
-            <Button component={RouterLink} variant="text" sx={{ color: "white" }} to={`/category/${category.slug}?id=${category.id}`}>
+            <Button component={RouterLink} variant="text" sx={{ color: "white" }} to={`/category/${category.slug}/${category.id}`}>
               {category.name}
             </Button>
           </StyledNavMain>
