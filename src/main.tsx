@@ -16,7 +16,7 @@ import ProductPage from "./routes/ProductPage";
 import Root from "./routes/Root";
 import SignupPage from "./routes/SignupPage";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { countriesLoader } from "./loader";
+import { categoryLoader, countriesLoader } from "./loader";
 import LoginPage from "./routes/LoginPage";
 import { RouteProtected } from "./components/RouteProtected";
 import AuthProvider from "./context/AuthContext";
@@ -56,8 +56,9 @@ const router = createBrowserRouter([
         element: <ProductPage />,
       },
       {
-        path: "category/:id",
+        path: "category/:slug/:id",
         element: <CategoryPage />,
+        loader: categoryLoader(queryClient),
       },
     ],
   },
