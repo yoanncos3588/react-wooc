@@ -23,16 +23,16 @@ const Root = () => {
   return (
     <>
       <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+        <Header toggleDrawer={toggleDrawer} />
+        <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer}>
+          <DrawerContent />
+        </Drawer>
         {state === "loading" ? (
           <Container sx={{ my: theme.spacing(5), flexGrow: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
             <CircularProgress />
           </Container>
         ) : (
           <>
-            <Header toggleDrawer={toggleDrawer} />
-            <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer}>
-              <DrawerContent />
-            </Drawer>
             <Container sx={{ my: theme.spacing(5), flexGrow: 1 }}>
               <Outlet />
             </Container>
