@@ -39,7 +39,7 @@ const FormLogin = () => {
   return (
     <>
       {mutation.isPending && <Loading />}
-      <Box component="form" sx={{ mt: theme.spacing(8), maxWidth: 500 }} data-test-id="form-login" onSubmit={handleSubmit}>
+      <Box component="form" sx={{ maxWidth: 500 }} data-test-id="form-login" onSubmit={handleSubmit}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextFieldWithValidation type="text" label="Nom d'utilisateur" name="username" validationRules={validation.rules.login.username} />

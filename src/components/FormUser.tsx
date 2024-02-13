@@ -67,7 +67,7 @@ const FormUser = () => {
   return (
     <>
       {mutation.isPending && <Loading />}
-      <Box component="form" sx={{ mt: theme.spacing(8) }} onSubmit={handleOnSubmit} data-test-id="form-user">
+      <Box component="form" onSubmit={handleOnSubmit} data-test-id="form-user">
         <Grid container spacing={2}>
           <FormUserBasicFields />
           <FormUserLocationFields isBilling={false} key={"shippingFields"} />

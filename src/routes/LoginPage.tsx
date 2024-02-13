@@ -1,17 +1,9 @@
-import { Box, Divider, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import FormLogin from "../components/FormLogin";
+import PageTitle from "../components/PageTitle";
 const LoginPage = () => {
-  const theme = useTheme();
-
   return (
     <>
-      <Box>
-        <Typography component="h1" variant="h2">
-          Se connecter
-        </Typography>
-        <Divider sx={{ my: theme.spacing(2) }} />
-      </Box>
+      <PageTitle title="Se connecter" />
       <FormLogin />
     </>
   );
