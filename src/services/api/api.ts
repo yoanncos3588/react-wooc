@@ -55,7 +55,6 @@ axiosInstanceWp.interceptors.response.use(
 /**  WOOC - add OAUTH for woocommerce api */
 axiosInstanceWoo.interceptors.request.use(
   (config) => {
-    console.log("intercept");
     if (!config.method) {
       throw Error("Missing method type for api request");
     }
