@@ -6,3 +6,10 @@ export const countriesQuery = () => ({
   refetchOnWindowFocus: false,
   refetchOnMount: false,
 });
+
+export const categoriesQuery = () => ({
+  queryKey: ["categories"],
+  queryFn: async () => api.category.getParent0(),
+  refetchOnWindowFocus: false,
+  refetchOnMount: false,
+});

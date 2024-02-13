@@ -1,23 +1,24 @@
 import { Button } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import StyledNavMain from "../styled/NavMain";
+import { useQuery } from "@tanstack/react-query";
+import { categoriesQuery } from "../queries";
+import { ProductCategorie } from "../types/categories";
 
 const NavMain = () => {
+  const { data } = useQuery(categoriesQuery());
+
   return (
-    <StyledNavMain>
-      <Button component={RouterLink} variant="text" sx={{ color: "white" }} to="/">
-        Menu 1
-      </Button>
-      <Button component={RouterLink} variant="text" sx={{ color: "white" }} to="/">
-        Menu 2
-      </Button>
-      <Button component={RouterLink} variant="text" sx={{ color: "white" }} to="/">
-        Menu 3
-      </Button>
-      <Button component={RouterLink} variant="text" sx={{ color: "white" }} to="/private">
-        private
-      </Button>
-    </StyledNavMain>
+    <>
+      {data &&
+        data.data.map((category: ProductCategorie) => (
+          <StyledNavMain key={category.id}>
+            <Button component={RouterLink} variant="text" sx={{ color: "white" }} to={`/category/${category.slug}?id=${category.id}`}>
+              {category.name}
+            </Button>
+          </StyledNavMain>
+        ))}
+    </>
   );
 };
 

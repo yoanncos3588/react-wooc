@@ -6,8 +6,8 @@ const category = {
    * Fetch products categories
    * https://woocommerce.github.io/woocommerce-rest-api-docs/#product-categories
    */
-  get: async (params?: UrlParams) => {
-    return await axiosInstanceWoo.get(`/products/categories`, params);
+  getParent0: async (params?: UrlParams) => {
+    return await axiosInstanceWoo.get(`/products/categories?per_page=99&parent=0`, params);
   },
 };
 
