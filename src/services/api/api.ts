@@ -60,7 +60,6 @@ axiosInstanceWoo.interceptors.request.use(
     }
     const queryParameters = new URLSearchParams(config.params).toString();
     const completeUrl = `${config.baseURL}${config.url}${queryParameters ? "?" + queryParameters : ""}`;
-    console.log(completeUrl);
 
     // Create REST API credentials for WC
     // info : https://woocommerce.github.io/woocommerce-rest-api-docs/#authentication-over-http
