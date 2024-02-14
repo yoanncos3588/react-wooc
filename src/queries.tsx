@@ -1,4 +1,5 @@
 import { api } from "./services/api/api";
+import { UrlParams } from "./types/apiParams";
 
 export const countriesQuery = () => ({
   queryKey: ["countries"],
@@ -14,10 +15,9 @@ export const categoriesQuery = () => ({
   refetchOnMount: false,
 });
 
-export const productsQueryByCategory = (categoryId: string | undefined) => ({
-  queryKey: ["products", categoryId],
-  queryFn: async () => (categoryId ? api.product.getAll({ category: categoryId }) : { data: [] }),
+export const productsQuery = (params: UrlParams) => ({
+  queryKey: ["products", params],
+  queryFn: async () => api.product.getAll(params),
   refetchOnWindowFocus: false,
   refetchOnMount: false,
-  enabled: !!categoryId, // disable if categoryId is undefined
 });
