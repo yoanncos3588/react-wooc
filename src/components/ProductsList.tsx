@@ -15,7 +15,11 @@ const ProductsList = ({ data, paginationComponent, filtersComponent }: Props) =>
   const theme = useTheme();
   return (
     <>
-      {filtersComponent && filtersComponent}
+      {filtersComponent && (
+        <Box sx={{ mb: theme.spacing(4) }}>
+          <>{filtersComponent}</>
+        </Box>
+      )}
       <Grid container spacing={4}>
         {data.map((product) => (
           <Grid item xs={12} md={4} key={product.id}>
