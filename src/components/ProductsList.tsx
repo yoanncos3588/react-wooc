@@ -3,6 +3,7 @@ import { Product } from "../types/products";
 import ProductCard from "./ProductCard";
 import { ComponentType } from "react";
 import { PropsPaginationBasic } from "./PaginationBasic";
+import { Box, useTheme } from "@mui/material";
 
 interface Props {
   data: Product[];
@@ -11,6 +12,7 @@ interface Props {
 }
 
 const ProductsList = ({ data, paginationComponent, filtersComponent }: Props) => {
+  const theme = useTheme();
   return (
     <>
       {filtersComponent && filtersComponent}
@@ -21,7 +23,11 @@ const ProductsList = ({ data, paginationComponent, filtersComponent }: Props) =>
           </Grid>
         ))}
       </Grid>
-      {paginationComponent && paginationComponent}
+      {paginationComponent && (
+        <Box sx={{ mt: theme.spacing(4) }}>
+          <>{paginationComponent}</>
+        </Box>
+      )}
     </>
   );
 };

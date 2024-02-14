@@ -37,7 +37,7 @@ const PaginationBasic = ({ currentPage, setCurrentPage, totalPages }: PropsPagin
   };
 
   return (
-    <Stack spacing={2}>
+    <Stack spacing={2} alignItems={"center"}>
       <Pagination count={Number(totalPages)} page={Number(currentPage)} onChange={handleChange} />
     </Stack>
   );
