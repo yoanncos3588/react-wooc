@@ -1,41 +1,27 @@
 import { FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Switch } from "@mui/material";
 import { useSearchParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import { filtersProductsQueryKeys } from "../services/filters/products";
+import { findFilterByParams, findFilterByKey, queryValues, selectFilterDefaultValue, selectFilterValues } from "../services/filters/products";
 
 const FilterProducts = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const orderKey = filtersProductsQueryKeys.order;
-  const orderByKey = filtersProductsQueryKeys.orderBy;
-  const onSaleKey = filtersProductsQueryKeys.onSale;
 
-  const defaultOrder = { label: "Plus récents", value: `${orderKey}=date&${orderByKey}=asc`, orderby: "asc", order: "date" };
+  const onSale = queryValues.onSale.key;
 
-  const orderByValues = [
-    defaultOrder,
-    { label: "Plus anciens ", value: `${orderKey}=date&${orderByKey}=desc`, orderby: "desc", order: "date" },
-    { label: "Nom (A-z)", value: `${orderKey}=title&${orderByKey}=asc`, orderby: "asc", order: "title" },
-    { label: "Nom (Z-a)", value: `${orderKey}=title&${orderByKey}=desc`, orderby: "desc", order: "title" },
-    { label: "Plus chers", value: `${orderKey}=price&${orderByKey}=asc`, orderby: "asc", order: "price" },
-    { label: "Moins chers", value: `${orderKey}=price&${orderByKey}=desc`, orderby: "desc", order: "price" },
-  ];
-
-  const orderBySelectValue = orderByValues.find(
-    (item) => item.value === `${orderKey}=${searchParams.get(orderKey)}&${orderByKey}=${searchParams.get(orderByKey)}`
-  );
+  const activFilter = findFilterByParams(searchParams.get(queryValues.orderBy.key), searchParams.get(queryValues.order.key));
 
   const handleChange = (e: SelectChangeEvent) => {
-    const selected = orderByValues.find((item) => e.target.value === `${orderKey}=${item.order}&${orderByKey}=${item.orderby}`);
+    const selected = findFilterByKey(e.target.value);
 
     setSearchParams(
       (searchParams) => {
         if (selected) {
-          if (selected.value === defaultOrder.value) {
-            searchParams.delete(orderByKey);
-            searchParams.delete(orderKey);
+          if (selected.label === selectFilterDefaultValue.label) {
+            searchParams.delete(queryValues.orderBy.key);
+            searchParams.delete(queryValues.order.key);
           } else {
-            searchParams.set(orderByKey, selected.orderby);
-            searchParams.set(orderKey, selected.order);
+            searchParams.set(queryValues.orderBy.key, selected.orderby);
+            searchParams.set(queryValues.order.key, selected.order);
           }
         }
         return searchParams;
@@ -46,7 +32,7 @@ const FilterProducts = () => {
 
   const handleChangeSale = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams((searchParams) => {
-      e.target.checked ? searchParams.set(onSaleKey, "true") : searchParams.delete(onSaleKey);
+      e.target.checked ? searchParams.set(onSale, "true") : searchParams.delete(onSale);
       return searchParams;
     });
   };
@@ -60,12 +46,12 @@ const FilterProducts = () => {
             <Select
               labelId="products-orderby"
               id="products-orderby-select"
-              value={orderBySelectValue ? orderBySelectValue.value : defaultOrder.value}
+              value={activFilter ? activFilter.key : selectFilterDefaultValue.key}
               label="Trier par"
               onChange={handleChange}
             >
-              {orderByValues.map((item) => (
-                <MenuItem value={item.value} key={uuidv4()}>
+              {selectFilterValues.map((item) => (
+                <MenuItem value={item.key} key={uuidv4()}>
                   {item.label}
                 </MenuItem>
               ))}
@@ -73,7 +59,7 @@ const FilterProducts = () => {
           </FormControl>
         </Grid>
         <Grid item xs={12} md={4}>
-          <FormControlLabel control={<Switch color="warning" onChange={handleChangeSale} checked={!!searchParams.get(onSaleKey)} />} label="Promo" />
+          <FormControlLabel control={<Switch color="warning" onChange={handleChangeSale} checked={!!searchParams.get(onSale)} />} label="Promo" />
         </Grid>
       </Grid>
     </>
