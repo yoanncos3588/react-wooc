@@ -1,6 +1,6 @@
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
-import { createSearchParams, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export interface PropsPaginationBasic {
   currentPage: string;
@@ -21,18 +21,9 @@ const PaginationBasic = ({ currentPage, setCurrentPage, totalPages }: PropsPagin
     if (setCurrentPage) {
       setCurrentPage(String(value));
     } else {
-      if (value === 1) {
-        // remove params if page = 1
-        const searchParams = new URLSearchParams(location.search);
-        if (searchParams.has("page")) {
-          searchParams.delete("page");
-          const newSearchParams = searchParams.toString();
-          const path = newSearchParams ? `${location.pathname}${newSearchParams}` : location.pathname;
-          navigate(path);
-        }
-      } else {
-        navigate({ search: `?${createSearchParams({ page: String(value) })}` });
-      }
+      const searchParams = new URLSearchParams(location.search);
+      searchParams.set("page", String(value));
+      navigate({ search: `?${searchParams.toString()}` });
     }
   };
 

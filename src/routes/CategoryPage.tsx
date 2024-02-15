@@ -7,6 +7,7 @@ import PaginationBasic from "../components/PaginationBasic";
 import Loading from "../components/Loading";
 import { Typography, useTheme } from "@mui/material";
 import FilterProducts from "../components/FilterProducts";
+import { buildApiParams } from "../services/filters/products";
 
 export interface CategoryPageUrlParams {
   id: string;
@@ -16,12 +17,12 @@ const CategoryPage = () => {
   const theme = useTheme();
 
   const currentPage = (urlSearchParams.get("page") ? urlSearchParams.get("page") : "1")!;
-
   const { id } = useParams() as { id: string }; // error should happens in router
-  const { data: dataProducts, isPending: isPendingProducts } = useQuery(
-    productsQuery(currentPage !== "1" ? { categories: id, page: currentPage } : { categories: id })
-  );
+
+  const { data: dataProducts, isPending: isPendingProducts } = useQuery(productsQuery(buildApiParams(id, urlSearchParams)));
+
   const { data: dataCategories } = useQuery(categoriesQuery());
+
   const category = dataCategories?.data.find((item) => item.id === Number(id));
   const products = dataProducts?.data;
   const totalPages = dataProducts?.headers["x-wp-totalpages"];

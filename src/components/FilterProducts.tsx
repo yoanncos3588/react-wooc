@@ -1,14 +1,15 @@
 import { FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Switch } from "@mui/material";
 import { useSearchParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import { findFilterByParams, findFilterByKey, queryValues, selectFilterDefaultValue, selectFilterValues } from "../services/filters/products";
+import { findFilterByParams, findFilterByKey, queriesAvailable, selectFilterDefaultValue, selectFilterValues } from "../services/filters/products";
+import { useEffect } from "react";
 
 const FilterProducts = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const onSale = queryValues.onSale.key;
+  const onSale = queriesAvailable.onSale.key;
 
-  const activFilter = findFilterByParams(searchParams.get(queryValues.orderBy.key), searchParams.get(queryValues.order.key));
+  const activFilter = findFilterByParams(searchParams.get(queriesAvailable.orderBy.key), searchParams.get(queriesAvailable.order.key));
 
   const handleChange = (e: SelectChangeEvent) => {
     const selected = findFilterByKey(e.target.value);
@@ -17,11 +18,11 @@ const FilterProducts = () => {
       (searchParams) => {
         if (selected) {
           if (selected.label === selectFilterDefaultValue.label) {
-            searchParams.delete(queryValues.orderBy.key);
-            searchParams.delete(queryValues.order.key);
+            searchParams.delete(queriesAvailable.orderBy.key);
+            searchParams.delete(queriesAvailable.order.key);
           } else {
-            searchParams.set(queryValues.orderBy.key, selected.orderby);
-            searchParams.set(queryValues.order.key, selected.order);
+            searchParams.set(queriesAvailable.orderBy.key, selected.orderby);
+            searchParams.set(queriesAvailable.order.key, selected.order);
           }
         }
         return searchParams;
@@ -36,6 +37,13 @@ const FilterProducts = () => {
       return searchParams;
     });
   };
+
+  useEffect(() => {
+    // reset page param when updating filter
+    if (searchParams.get("page")) {
+      searchParams.delete("page");
+    }
+  }, [searchParams]);
 
   return (
     <>

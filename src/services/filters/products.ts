@@ -1,3 +1,5 @@
+import { UrlParams } from "../../types/apiParams";
+
 interface Filter {
   key: string;
   label: string;
@@ -5,28 +7,55 @@ interface Filter {
   order: string;
 }
 
-export const queryValues = {
-  orderBy: { key: "orderby", values: { title: "title", price: "price", date: "date" } },
-  order: { key: "order", values: { asc: "asc", desc: "desc" } },
-  onSale: { key: "on_sale", values: { true: "true", false: "false" } },
+interface QueriesAvailable {
+  [key: string]: { key: string; values: Array<string> };
+}
+
+export const queriesAvailable: QueriesAvailable = {
+  orderBy: { key: "orderby", values: ["title", "price", "date"] },
+  order: { key: "order", values: ["asc", "desc"] },
+  onSale: { key: "on_sale", values: ["true", "false"] },
 };
 
-const date = queryValues.orderBy.values.date;
-const title = queryValues.orderBy.values.title;
-const price = queryValues.orderBy.values.price;
+/**
+ * Find if a key exist in queriesAvailable obj and test if the value exist for this key
+ */
+export function validParam(key: string, value: string): boolean {
+  for (const query in queriesAvailable) {
+    if (key === queriesAvailable[query].key && queriesAvailable[query].values.includes(value)) {
+      return true;
+    }
+  }
+  return false;
+}
 
-const desc = queryValues.order.values.desc;
-const asc = queryValues.order.values.asc;
+/**
+ * Build api parameters from an urlSearchParams instance
+ */
+export function buildApiParams(id: string, urlSearchParams: URLSearchParams): UrlParams {
+  const params: UrlParams = {};
+  const page = urlSearchParams.get("page");
+  params.category = id;
+  if (page && page !== "1") {
+    params.page = page;
+  }
+  for (const [key, value] of urlSearchParams) {
+    if (validParam(key, value)) {
+      params[key] = value;
+    }
+  }
+  return params;
+}
 
-export const selectFilterDefaultValue = { key: "default", label: "Plus récents", orderby: date, order: asc };
+export const selectFilterDefaultValue = { key: "default", label: "Plus récents", orderby: "date", order: "asc" };
 
 export const selectFilterValues: Array<Filter> = [
   selectFilterDefaultValue,
-  { key: "older", label: "Plus anciens ", orderby: date, order: desc },
-  { key: "name", label: "Nom (A-z)", orderby: title, order: asc },
-  { key: "nameReverse", label: "Nom (Z-a)", orderby: title, order: desc },
-  { key: "price", label: "Plus chers", orderby: price, order: asc },
-  { key: "priceReverse", label: "Moins chers", orderby: price, order: desc },
+  { key: "older", label: "Plus anciens ", orderby: "date", order: "desc" },
+  { key: "name", label: "Nom (A-z)", orderby: "title", order: "asc" },
+  { key: "nameReverse", label: "Nom (Z-a)", orderby: "title", order: "desc" },
+  { key: "price", label: "Plus chers", orderby: "price", order: "asc" },
+  { key: "priceReverse", label: "Moins chers", orderby: "price", order: "desc" },
 ];
 
 export function findFilterByParams(orderBy: string | null, order: string | null) {
