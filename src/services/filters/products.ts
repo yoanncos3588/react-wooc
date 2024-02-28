@@ -8,21 +8,23 @@ interface Filter {
 }
 
 interface QueriesAvailable {
-  [key: string]: { key: string; values: Array<string> };
+  [key: string]: { key: string; values?: Array<string> };
 }
 
 export const queriesAvailable: QueriesAvailable = {
   orderBy: { key: "orderby", values: ["title", "price", "date"] },
   order: { key: "order", values: ["asc", "desc"] },
   onSale: { key: "on_sale", values: ["true", "false"] },
+  minPrice: { key: "min_price" },
+  maxPrice: { key: "max_price" },
 };
 
 /**
  * Find if a key exist in queriesAvailable obj and test if the value exist for this key
  */
-export function validParam(key: string, value: string): boolean {
+export function validParam(key: string): boolean {
   for (const query in queriesAvailable) {
-    if (key === queriesAvailable[query].key && queriesAvailable[query].values.includes(value)) {
+    if (key === queriesAvailable[query].key) {
       return true;
     }
   }
@@ -40,7 +42,7 @@ export function buildApiParams(id: string, urlSearchParams: URLSearchParams): Ur
     params.page = page;
   }
   for (const [key, value] of urlSearchParams) {
-    if (validParam(key, value)) {
+    if (validParam(key)) {
       params[key] = value;
     }
   }

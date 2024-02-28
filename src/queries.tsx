@@ -19,7 +19,7 @@ export const categoriesQuery = () => ({
   ...options,
   queryKey: ["categories"],
   queryFn: async () => api.category.getAll(),
-  // staleTime: 10 * (60 * 1000), // 10 mins
+  staleTime: 10 * (60 * 1000), // 10 mins
 });
 
 export const productsQuery = (params: UrlParams) => ({
