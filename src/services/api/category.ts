@@ -5,11 +5,17 @@ import { ProductCategorie } from "../../types/categories";
 
 const category = {
   /**
-   * Fetch products categories
+   * Fetch top categories (exclude empty ones)
    * https://woocommerce.github.io/woocommerce-rest-api-docs/#product-categories
    */
-  getParent0: async (params?: UrlParams): Promise<AxiosResponse<ProductCategorie[], unknown>> => {
-    return await axiosInstanceWoo.get(`/products/categories?per_page=99&parent=0`, { params });
+  getTopLevel: async (params?: UrlParams): Promise<AxiosResponse<ProductCategorie[], unknown>> => {
+    return await axiosInstanceWoo.get(`/products/categories?per_page=99&parent=0&hide_empty=true`, { params });
+  },
+  getAll: async (params?: UrlParams): Promise<AxiosResponse<ProductCategorie[], unknown>> => {
+    return await axiosInstanceWoo.get(`/products/categories?per_page=99&hide_empty=true`, { params });
+  },
+  getById: async (id: string, params?: UrlParams): Promise<AxiosResponse<ProductCategorie[], unknown>> => {
+    return await axiosInstanceWoo.get(`/products/categories/${id}`, { params });
   },
 };
 

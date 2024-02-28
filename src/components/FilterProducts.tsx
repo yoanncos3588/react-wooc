@@ -13,7 +13,6 @@ const FilterProducts = () => {
 
   const handleChange = (e: SelectChangeEvent) => {
     const selected = findFilterByKey(e.target.value);
-
     setSearchParams(
       (searchParams) => {
         if (selected) {

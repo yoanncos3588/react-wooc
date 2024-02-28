@@ -9,12 +9,15 @@ export const countriesLoader = (queryClient: QueryClient) => async () => {
   return await queryClient.ensureQueryData(query);
 };
 
-export const categoryLoader =
+export const categoryProductsLoader =
   (queryClient: QueryClient) =>
   async ({ params, request }: { params: Params<"id">; request: Request }) => {
     const id = params.id as string;
     const searchParams = new URL(request.url).searchParams;
-    const queryCategory = categoriesQuery();
     const queryProducts = productsQuery(buildApiParams(id, searchParams));
-    return await Promise.all([queryClient.ensureQueryData(queryCategory), queryClient.ensureQueryData(queryProducts)]);
+    return await queryClient.ensureQueryData(queryProducts);
   };
+
+export const categoriesLoader = (queryClient: QueryClient) => async () => {
+  return await queryClient.ensureQueryData(categoriesQuery());
+};

@@ -20,7 +20,6 @@ const CategoryPage = () => {
   const { id } = useParams() as { id: string }; // error should happens in router
 
   const { data: dataProducts, isPending: isPendingProducts } = useQuery(productsQuery(buildApiParams(id, urlSearchParams)));
-
   const { data: dataCategories } = useQuery(categoriesQuery());
 
   const category = dataCategories?.data.find((item) => item.id === Number(id));
@@ -32,7 +31,7 @@ const CategoryPage = () => {
     <>
       {products && category && (
         <>
-          <PageTitle title={category?.name} />
+          <PageTitle title={category.name} />
           <Typography component="div" variant="caption" sx={{ mb: theme.spacing(4) }}>
             {totalProducts} articles
           </Typography>
