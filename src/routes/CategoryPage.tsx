@@ -5,7 +5,7 @@ import { categoriesQuery, productsQuery } from "../queries";
 import ProductsList from "../components/ProductsList";
 import PaginationBasic from "../components/PaginationBasic";
 import Loading from "../components/Loading";
-import { Typography, useTheme } from "@mui/material";
+import { Button, Typography, useTheme } from "@mui/material";
 import FilterProducts from "../components/FilterProducts";
 import { buildApiParams } from "../services/filters/products";
 
@@ -41,7 +41,7 @@ const CategoryPage = () => {
             <ProductsList
               data={products}
               // @ts-expect-error shouldnt be an error
-              paginationComponent={<PaginationBasic currentPage={currentPage} totalPages={totalPages} />}
+              paginationComponent={totalPages > 1 && <PaginationBasic currentPage={currentPage} totalPages={totalPages} />}
               // @ts-expect-error shouldnt be an error
               filtersComponent={<FilterProducts />}
             />
