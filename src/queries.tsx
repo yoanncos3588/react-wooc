@@ -10,7 +10,7 @@ interface dataHeaders {
   total: string;
 }
 
-interface formatedDataResponseType<T> {
+export interface formatedDataResponseType<T> {
   headers?: dataHeaders;
   data: T;
 }
