@@ -35,7 +35,7 @@ const ProductCard = ({ product }: Props) => {
           </Box>
           <Divider />
           <Typography component={"div"} variant="h6" mt={2} textAlign={"right"}>
-            {product.type !== "variable" ? (
+            {product.type === "simple" ? (
               <ProductPrice product={product} />
             ) : (
               <>
