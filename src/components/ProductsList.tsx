@@ -3,9 +3,7 @@ import { Product } from "../types/products";
 import ProductCard from "./ProductCard";
 import { ComponentType } from "react";
 import { PropsPaginationBasic } from "./PaginationBasic";
-import { Box, Button, Typography, useTheme } from "@mui/material";
-import category from "../services/api/category";
-import { Link as RouterLink } from "react-router-dom";
+import { Box, Typography, useTheme } from "@mui/material";
 
 interface Props {
   data: Product[];
