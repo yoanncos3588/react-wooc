@@ -1,11 +1,13 @@
 import { Box, Divider, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import React from "react";
 
 interface Props {
+  children?: React.ReactNode;
   title: string;
 }
 
-const PageTitle = ({ title }: Props) => {
+const PageTitle = ({ children, title }: Props) => {
   const theme = useTheme();
   return (
     <Box sx={{ mb: theme.spacing(8) }}>
@@ -13,6 +15,7 @@ const PageTitle = ({ title }: Props) => {
         {title}
       </Typography>
       <Divider sx={{ my: theme.spacing(2) }} />
+      {children}
     </Box>
   );
 };

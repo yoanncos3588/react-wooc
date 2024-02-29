@@ -10,6 +10,7 @@ import FilterProducts from "../components/FilterProducts";
 import { buildApiParams } from "../services/filters/products";
 import { ProductCategorie } from "../types/categories";
 import { Product } from "../types/products";
+import CategoryNav from "../components/CategoryNav";
 
 export interface CategoryPageUrlParams {
   id: string;
@@ -30,17 +31,21 @@ const CategoryPage = () => {
 
   const products = dataProducts.data;
   const category = dataCategories.data.find((item) => item.id === Number(id));
-  const totalPages = dataProducts.headers?.totalPages;
-  const totalProducts = dataProducts.headers?.total;
+  const totalPages = Number(dataProducts.headers?.totalPages);
+  const totalProducts = Number(dataProducts.headers?.total);
 
   return (
     <>
       {products && category && (
         <>
-          <PageTitle title={category.name} />
+          <PageTitle title={category.name}>
+            <CategoryNav activCategory={category} />
+          </PageTitle>
+
           <Typography component="div" variant="caption" sx={{ mb: theme.spacing(4) }}>
             {totalProducts} articles
           </Typography>
+
           {isPendingProducts ? (
             <Loading />
           ) : (
