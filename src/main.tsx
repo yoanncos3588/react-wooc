@@ -52,7 +52,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "product/:categoryId",
+        path: "product/:slug/:id",
         element: <ProductPage />,
       },
       {
