@@ -77,7 +77,14 @@ const CategoryNav = ({ activCategory }: Props) => {
 
   return (
     <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-      <Tabs aria-label="Dans cette même catégorie" value={activCategory.id} onChange={handleChange}>
+      <Tabs
+        aria-label="Dans cette même catégorie"
+        value={activCategory.id}
+        onChange={handleChange}
+        scrollButtons={true}
+        allowScrollButtonsMobile
+        variant="scrollable"
+      >
         {tabs.map((t) => t)}
       </Tabs>
     </Box>
