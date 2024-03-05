@@ -1,13 +1,15 @@
+import { SxProps } from "@mui/material";
 import StyledProductPrice from "../styled/ProductPrice";
 import { Product } from "../types/products";
 
 interface Props {
   product: Product;
+  sx?: SxProps;
 }
 
-const ProductPrice = ({ product }: Props) => {
+const ProductPrice = ({ product, sx }: Props) => {
   return product.onSale ? (
-    <StyledProductPrice>
+    <StyledProductPrice sx={sx}>
       <span className="price price--old">
         <s>{product.regularPrice} €</s>
       </span>
@@ -17,7 +19,7 @@ const ProductPrice = ({ product }: Props) => {
     </StyledProductPrice>
   ) : (
     <>
-      <StyledProductPrice>
+      <StyledProductPrice sx={sx}>
         <span className="price">{product.regularPrice} €</span>
       </StyledProductPrice>
     </>

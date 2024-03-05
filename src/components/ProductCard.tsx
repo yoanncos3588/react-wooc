@@ -4,6 +4,7 @@ import OnSale from "./OnSale";
 import DOMPurify from "dompurify";
 import ProductPrice from "./ProductPrice";
 import { useNavigate } from "react-router-dom";
+import ProductImages from "./ProductImages";
 
 interface Props {
   product: Product;
@@ -18,7 +19,9 @@ const ProductCard = ({ product }: Props) => {
       <Card sx={{ position: "relative" }}>
         <CardActionArea onClick={() => navigate(`/product/${product.slug}/${product.id}`)}>
           {product.onSale && <OnSale sx={{ position: "absolute", right: 8, top: 8 }} />}
-          <CardMedia image={product.images[0] ? product.images[0].src : "/placeholder.png"} title={product.name} sx={{ height: 400 }} />
+          <CardMedia>
+            <ProductImages productImages={product.images} />
+          </CardMedia>
           <CardContent>
             <Typography component="h2" variant="h6">
               {product.name}

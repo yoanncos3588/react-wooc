@@ -80,3 +80,12 @@ export const productsQuery = (params: UrlParams) => ({
     return formatDataResponse(res);
   },
 });
+
+export const productQuery = (id: string) => ({
+  ...options,
+  queryKey: ["product", id],
+  queryFn: async () => {
+    const res = await api.product.getById(Number(id));
+    return formatDataResponse(res);
+  },
+});
