@@ -12,17 +12,57 @@ const CategoryNav = ({ activCategory }: Props) => {
   const navigate = useNavigate();
   const { data: dataCategories } = useQuery(categoriesQuery()) as { data: formatedDataResponseType<ProductCategorie[]> };
 
-  const categoryIsParent = dataCategories.data.some((category) => category.id === activCategory.id && category.parent === 0);
+  let tabs: Array<JSX.Element> = [];
 
-  let tabs: Array<ProductCategorie> = [];
+  const lastAncestor = getLastAncestorCategory(activCategory);
 
-  if (categoryIsParent) {
-    // if cat is parent then add this item to the tabs and find items where current category is parent cat
-    tabs = [activCategory, ...dataCategories.data.filter((category) => category.parent === activCategory.id)];
+  const parentCategories = dataCategories.data.filter((c) => lastAncestor && activCategory.parent === c.id && lastAncestor.id !== c.id);
+  const siblingsCategories = dataCategories.data.filter((c) => activCategory.parent === c.parent);
+  const childsCategories = dataCategories.data.filter((c) => activCategory.id === c.parent);
+
+  const activCategoryTab = generateMuiTabs([activCategory], true);
+  const lastAncestorTab = lastAncestor ? generateMuiTabs([lastAncestor], true) : null;
+  const parentTabs = generateMuiTabs(parentCategories, siblingsCategories.length > 0 ? true : false);
+  const siblingsTabs = generateMuiTabs(siblingsCategories, childsCategories.length > 0 ? true : false);
+  const childsTabs = generateMuiTabs(childsCategories);
+
+  /**
+   * generate jsx Tab element for products categories
+   * @param categoriesArray list of categories
+   * @param addChevron add a chevron ">" a the end of the last item to show parent/sub category
+   * @returns {Array<JSX.Element>} Tab MUI JSX.elements
+   */
+  function generateMuiTabs(categories: Array<ProductCategorie>, addChevron: boolean = false): Array<JSX.Element> {
+    return categories.map((c, index) => {
+      return <Tab label={`${c.name} ${addChevron && index === categories.length - 1 ? ">" : ""} `} value={c.id} key={c.id} />;
+    });
+  }
+
+  // merge all tabs because MUI Tabs dont want fragment as child
+  if (activCategory.parent === 0) {
+    tabs = [...activCategoryTab, ...childsTabs];
   } else {
-    // if cat is child then add parent to the tabs and find siblings who share the same parent
-    const parentCat = dataCategories.data.find((category) => category.id === activCategory.parent);
-    tabs = [...(parentCat ? [parentCat] : []), ...dataCategories.data.filter((category) => category.parent === activCategory.parent)];
+    if (lastAncestorTab) {
+      tabs = [...lastAncestorTab, ...parentTabs, ...siblingsTabs, ...childsTabs];
+    } else {
+      tabs = [...parentTabs, ...siblingsTabs, ...childsTabs];
+    }
+  }
+
+  /**
+   * Recursively find the oldest parent of a category
+   */
+  function getLastAncestorCategory(category: ProductCategorie) {
+    if (category.parent !== 0) {
+      const parent = dataCategories.data.find((c) => c.id === category.parent);
+      if (parent) {
+        return getLastAncestorCategory(parent);
+      } else {
+        return;
+      }
+    } else {
+      return category;
+    }
   }
 
   /**
@@ -36,15 +76,11 @@ const CategoryNav = ({ activCategory }: Props) => {
   }
 
   return (
-    tabs.length > 1 && (
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs aria-label="Dans cette même catégorie" value={activCategory.id} onChange={handleChange}>
-          {tabs.map((c, index) => (
-            <Tab label={`${c.name} ${index === 0 ? " >" : ""}`} value={c.id} key={c.id} />
-          ))}
-        </Tabs>
-      </Box>
-    )
+    <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      <Tabs aria-label="Dans cette même catégorie" value={activCategory.id} onChange={handleChange}>
+        {tabs.map((t) => t)}
+      </Tabs>
+    </Box>
   );
 };
 
