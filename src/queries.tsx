@@ -85,7 +85,12 @@ export const productQuery = (id: string) => ({
   ...options,
   queryKey: ["product", id],
   queryFn: async () => {
-    const res = await api.product.getById(Number(id));
-    return formatDataResponse(res);
+    const resProduct = await api.product.getById(Number(id));
+    // if product is variable, load first variation as product
+    if (resProduct.data.type === "variable" && resProduct.data.variations.length > 0) {
+      const resVariation = await api.product.getById(resProduct.data.variations[0]);
+      return formatDataResponse(resVariation);
+    }
+    return formatDataResponse(resProduct);
   },
 });

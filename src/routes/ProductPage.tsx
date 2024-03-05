@@ -19,7 +19,6 @@ const ProductPage = () => {
   };
 
   const product = data.data;
-  console.log(product);
   const descriptionSanitized = DOMPurify.sanitize(product.description);
 
   return (
