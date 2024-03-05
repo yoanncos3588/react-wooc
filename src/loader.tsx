@@ -1,7 +1,8 @@
 import { categoriesQuery, countriesQuery, productQuery, productsQuery } from "./queries";
 import { QueryClient } from "@tanstack/react-query";
-import { Params } from "react-router-dom";
+import { Params, redirect } from "react-router-dom";
 import { buildApiParams } from "./services/filters/products";
+import { Product } from "./types/products";
 
 export const countriesLoader = (queryClient: QueryClient) => async () => {
   const query = countriesQuery();
@@ -24,7 +25,14 @@ export const categoriesLoader = (queryClient: QueryClient) => async () => {
 
 export const productLoader =
   (queryClient: QueryClient) =>
-  async ({ params }: { params: Params<"id">; request: Request }) => {
-    const id = params.id as string;
-    return await queryClient.ensureQueryData(productQuery(id));
+  async ({ params }: { params: { id: string; slug: string }; request: Request }) => {
+    const { id, slug }: { id: string; slug: string } = params;
+    const res = await queryClient.ensureQueryData(productQuery(id));
+    const product = res.data as Product;
+    // if product is variable, redirect to the first variation
+    if (product && product.type === "variable") {
+      return redirect(`/product/${slug}/${product.variations[0]}`);
+    } else {
+      return res;
+    }
   };
