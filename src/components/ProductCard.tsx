@@ -40,20 +40,11 @@ const ProductCard = ({ product }: Props) => {
               />
             </Box>
             <Divider />
-            <Typography component={"div"} variant="h6" mt={2} textAlign={"right"}>
-              {product.type === "simple" ? (
+            <Box component={"div"} sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+              <Typography variant="h6">
                 <ProductPrice product={product} />
-              ) : (
-                <>
-                  <span>
-                    <Typography component={"span"} variant="subtitle2" sx={{ opacity: 0.3 }}>
-                      à partir de
-                    </Typography>{" "}
-                    {product.price} €
-                  </span>
-                </>
-              )}
-            </Typography>
+              </Typography>
+            </Box>
           </CardContent>
         </CardActionArea>
       </Card>

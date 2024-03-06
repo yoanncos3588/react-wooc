@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProductImages } from "../types/products";
 import { Box, Grid } from "@mui/material";
 
@@ -10,9 +10,13 @@ interface Props {
 const ProductImages = ({ productImages, withThumbnails = false }: Props) => {
   const [activImage, setActivImage] = useState(productImages[0]);
 
-  function handleThumbnailHover(e: React.MouseEvent<Element, MouseEvent>, image: ProductImages) {
+  function handleThumbnailHover(_e: React.MouseEvent<Element, MouseEvent>, image: ProductImages) {
     setActivImage((prev) => (prev.id !== image.id ? image : prev));
   }
+
+  useEffect(() => {
+    setActivImage(productImages[0]);
+  }, [productImages]);
 
   return (
     <>
