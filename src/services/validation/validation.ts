@@ -45,7 +45,6 @@ const validation = {
     // test if obj has all the key rules
     for (const keyRules in rules) {
       if (!(keyRules in data)) {
-        console.log(keyRules);
         return false;
       }
     }
