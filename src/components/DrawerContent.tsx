@@ -11,7 +11,7 @@ const DrawerContent = () => {
         <Divider sx={{ my: 2 }} aria-hidden="true" />
         <NavMain />
         <Divider sx={{ my: 2 }} aria-hidden="true" />
-        <NavAccount />
+        <NavAccount showInDrawer={true} />
       </Box>
     </>
   );
