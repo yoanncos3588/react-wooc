@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useSearchParams } from "react-router-dom";
 import PageTitle from "../components/PageTitle";
-import { categoriesQuery, formatedDataResponseType, productsQuery } from "../queries";
+import { categoriesQuery, FormatedDataResponseType, productsQuery } from "../queries";
 import ProductsList from "../components/ProductsList";
 import PaginationBasic from "../components/PaginationBasic";
 import Loading from "../components/Loading";
@@ -23,11 +23,11 @@ const CategoryPage = () => {
   const { id } = useParams() as { id: string }; // error should happens in router
 
   const { data: dataProducts, isPending: isPendingProducts } = useQuery(productsQuery(buildApiParams(id, urlSearchParams))) as {
-    data: formatedDataResponseType<Product[]>;
+    data: FormatedDataResponseType<Product[]>;
     isPending: boolean;
   };
 
-  const { data: dataCategories } = useQuery(categoriesQuery()) as { data: formatedDataResponseType<ProductCategorie[]> };
+  const { data: dataCategories } = useQuery(categoriesQuery()) as { data: FormatedDataResponseType<ProductCategorie[]> };
 
   const products = dataProducts.data;
   const category = dataCategories.data.find((item) => item.id === Number(id));

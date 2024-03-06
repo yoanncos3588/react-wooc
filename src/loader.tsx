@@ -1,4 +1,4 @@
-import { categoriesQuery, countriesQuery, productsQuery } from "./queries";
+import { categoriesQuery, countriesQuery, productQuery, productsQuery } from "./queries";
 import { QueryClient } from "@tanstack/react-query";
 import { Params } from "react-router-dom";
 import { buildApiParams } from "./services/filters/products";
@@ -21,3 +21,11 @@ export const categoryProductsLoader =
 export const categoriesLoader = (queryClient: QueryClient) => async () => {
   return await queryClient.ensureQueryData(categoriesQuery());
 };
+
+export const productLoader =
+  (queryClient: QueryClient) =>
+  async ({ params }: { params: { id: string }; request: Request }) => {
+    const { id } = params;
+    const res = await queryClient.ensureQueryData(productQuery(id));
+    return res;
+  };

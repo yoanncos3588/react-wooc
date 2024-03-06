@@ -1,14 +1,14 @@
 import { AxiosResponse } from "axios";
 import { UrlParams } from "../../types/apiParams";
 import { axiosInstanceWoo } from "./api";
-import { Product } from "../../types/products";
+import { Product, ProductVariation } from "../../types/products";
 
 const product = {
   /**
    * Fetch products from api, with possibles filters
    * @param params @type {UrlParams} : obj listing all parameters use to construct url parameters for filtering
    */
-  getAll: async (params?: UrlParams): Promise<AxiosResponse<Product[], unknown>> => {
+  getAll: async (params?: UrlParams | URLSearchParams): Promise<AxiosResponse<Product[], unknown>> => {
     return await axiosInstanceWoo.get("/products", { params });
   },
   /**
@@ -31,7 +31,7 @@ const product = {
    * @param productId @type {number} : product id parent of the variations
    * @param params @type {UrlParams} : obj listing all parameters use to construct url parameters for filtering
    */
-  getVariations: async (productId: number, params?: UrlParams) => {
+  getVariations: async (productId: number, params?: UrlParams | URLSearchParams): Promise<AxiosResponse<ProductVariation[], unknown>> => {
     return await axiosInstanceWoo.get(`/products/${productId}/variations`, { params });
   },
   /**

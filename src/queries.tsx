@@ -10,7 +10,7 @@ interface dataHeaders {
   total: string;
 }
 
-export interface formatedDataResponseType<T> {
+export interface FormatedDataResponseType<T> {
   headers?: dataHeaders;
   data: T;
 }
@@ -31,8 +31,8 @@ function formatDataToCamelCase(data: unknown) {
 /**
  * clean axio's response
  */
-function formatDataResponse(response: AxiosResponse<unknown, unknown>): formatedDataResponseType<unknown> {
-  const dataResponse: formatedDataResponseType<unknown> = {
+function formatDataResponse(response: AxiosResponse<unknown, unknown>): FormatedDataResponseType<unknown> {
+  const dataResponse: FormatedDataResponseType<unknown> = {
     data: formatDataToCamelCase(response.data),
   };
   if (response.headers["x-wp-totalpages"] && response.headers["x-wp-total"]) {
@@ -72,11 +72,49 @@ export const categoriesQuery = () => ({
   staleTime: 10 * (60 * 1000), // 10 mins
 });
 
-export const productsQuery = (params: UrlParams) => ({
+export const productsQuery = (params: UrlParams | URLSearchParams, queryOptions = {}) => ({
   ...options,
   queryKey: ["products", params],
   queryFn: async () => {
     const res = await api.product.getAll(params);
+    return formatDataResponse(res);
+  },
+  ...queryOptions,
+});
+
+export const productQuery = (id: string) => ({
+  ...options,
+  queryKey: ["product", id],
+  queryFn: async () => {
+    const resProduct = await api.product.getById(Number(id));
+    return formatDataResponse(resProduct);
+  },
+});
+
+export const productVariationsQuery = (id: string, params: UrlParams | URLSearchParams, queryOptions = {}) => ({
+  ...options,
+  queryKey: ["productVariations", id, params],
+  queryFn: async () => {
+    const resProduct = await api.product.getVariations(Number(id), params);
+    return formatDataResponse(resProduct);
+  },
+  ...queryOptions,
+});
+
+export const productAttributeQuery = (id: string) => ({
+  ...options,
+  queryKey: ["productAttribute", id],
+  queryFn: async () => {
+    const res = await api.product.getAttributeById(Number(id));
+    return formatDataResponse(res);
+  },
+});
+
+export const attributeTermsQuery = (attributeId: string) => ({
+  ...options,
+  queryKey: ["attributeTerms", attributeId],
+  queryFn: async () => {
+    const res = await api.product.getAttributeTerms(Number(attributeId));
     return formatDataResponse(res);
   },
 });
