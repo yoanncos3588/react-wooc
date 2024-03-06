@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { formatedDataResponseType, productsQuery } from "../queries";
+import { FormatedDataResponseType, productsQuery } from "../queries";
 import { Product } from "../types/products";
 import { Divider, Typography } from "@mui/material";
 import ProductsList from "./ProductsList";
@@ -9,7 +9,7 @@ interface Props {
 }
 const ProductsRelated = ({ product }: Props) => {
   const { data, isLoading, isSuccess } = useQuery(productsQuery({ include: product.relatedIds.toString() }, { enabled: product.relatedIds.length > 0 })) as {
-    data: formatedDataResponseType<Product[]>;
+    data: FormatedDataResponseType<Product[]>;
     isLoading: boolean;
     isSuccess: boolean;
   };

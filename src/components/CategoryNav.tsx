@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { categoriesQuery, formatedDataResponseType } from "../queries";
+import { categoriesQuery, FormatedDataResponseType } from "../queries";
 import { ProductCategorie } from "../types/categories";
 import { Box, Tab, Tabs } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +10,7 @@ interface Props {
 
 const CategoryNav = ({ activCategory }: Props) => {
   const navigate = useNavigate();
-  const { data: dataCategories } = useQuery(categoriesQuery()) as { data: formatedDataResponseType<ProductCategorie[]> };
+  const { data: dataCategories } = useQuery(categoriesQuery()) as { data: FormatedDataResponseType<ProductCategorie[]> };
 
   let tabs: Array<JSX.Element> = [];
 

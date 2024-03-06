@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import PageTitle from "../components/PageTitle";
 import { useParams } from "react-router-dom";
-import { formatedDataResponseType, productQuery, productVariationsQuery } from "../queries";
+import { FormatedDataResponseType, productQuery, productVariationsQuery } from "../queries";
 import { Product, ProductVariation } from "../types/products";
 import { Box, Button, Divider, Grid, Link, Typography, useTheme } from "@mui/material";
 import DOMPurify from "dompurify";
@@ -22,7 +22,7 @@ const ProductPage = () => {
   const [matchingVariation, setMatchingVariation] = useState<ProductVariation | undefined>(undefined);
 
   const { data: dataProduct } = useQuery(productQuery(id)) as {
-    data: formatedDataResponseType<Product>;
+    data: FormatedDataResponseType<Product>;
   };
 
   const product = dataProduct.data;
@@ -39,7 +39,7 @@ const ProductPage = () => {
       { per_page: 100, page: currentVariationsPage },
       { enabled: product.type === "variable" && Object.keys(selectedAttributes).length > 0, keepPreviousData: true }
     )
-  ) as { data: formatedDataResponseType<ProductVariation[]>; isFetched: boolean; isLoading: boolean };
+  ) as { data: FormatedDataResponseType<ProductVariation[]>; isFetched: boolean; isLoading: boolean };
 
   // if there is more than 1 page of variations, update state, query will keep previous data when rerender
   if (isFetchedVariations && dataVariations.headers && dataVariations.headers.totalPages) {
