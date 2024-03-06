@@ -9,9 +9,12 @@ interface Props {
   data: Product[];
   paginationComponent?: ComponentType<PropsPaginationBasic>;
   filtersComponent?: ComponentType;
+  colMd: number;
+  colXs: number;
+  mini: boolean;
 }
 
-const ProductsList = ({ data, paginationComponent, filtersComponent }: Props) => {
+const ProductsList = ({ data, paginationComponent, filtersComponent, colMd = 4, colXs = 12, mini = false }: Props) => {
   const theme = useTheme();
   return (
     <>
@@ -20,11 +23,11 @@ const ProductsList = ({ data, paginationComponent, filtersComponent }: Props) =>
           <>{filtersComponent}</>
         </Box>
       )}
-      <Grid container spacing={4}>
+      <Grid container spacing={mini ? 2 : 4}>
         {data.length ? (
           data.map((product) => (
-            <Grid item xs={12} md={4} key={product.id}>
-              <ProductCard product={product} />
+            <Grid item xs={colXs} md={colMd} key={product.id}>
+              <ProductCard product={product} mini={mini} />
             </Grid>
           ))
         ) : (

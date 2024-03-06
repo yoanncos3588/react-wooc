@@ -8,11 +8,14 @@ import ProductImages from "./ProductImages";
 
 interface Props {
   product: Product;
+  mini: boolean;
 }
 
-const ProductCard = ({ product }: Props) => {
+const ProductCard = ({ product, mini = false }: Props) => {
   const navigate = useNavigate();
   const descriptionSanitized = DOMPurify.sanitize(product.shortDescription);
+
+  const spacing = mini ? 1 : 2;
 
   return (
     <>
@@ -23,25 +26,27 @@ const ProductCard = ({ product }: Props) => {
             <ProductImages productImages={product.images} />
           </CardMedia>
           <CardContent>
-            <Typography component="h2" variant="h6">
+            <Typography component="h2" variant={mini ? "subtitle2" : "h6"} mb={spacing}>
               {product.name}
             </Typography>
-            <Box sx={{ position: "relative", height: 100, overflow: "hidden" }}>
-              <Typography component="div" dangerouslySetInnerHTML={{ __html: descriptionSanitized }} />
-              <Box
-                sx={{
-                  position: "absolute",
-                  width: "100%",
-                  height: 40,
-                  background: `linear-gradient(180deg, rgba(255,255,255,0) 0%, #1F1F1F 60%)`,
-                  bottom: 0,
-                  left: 0,
-                }}
-              />
-            </Box>
+            {!mini && (
+              <Box sx={{ position: "relative", height: 100, overflow: "hidden" }}>
+                <Typography component="div" dangerouslySetInnerHTML={{ __html: descriptionSanitized }} />
+                <Box
+                  sx={{
+                    position: "absolute",
+                    width: "100%",
+                    height: 40,
+                    background: `linear-gradient(180deg, rgba(255,255,255,0) 0%, #1F1F1F 60%)`,
+                    bottom: 0,
+                    left: 0,
+                  }}
+                />
+              </Box>
+            )}
             <Divider />
-            <Box component={"div"} sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
-              <Typography variant="h6">
+            <Box component={"div"} sx={{ display: "flex", justifyContent: "flex-end", mt: spacing }}>
+              <Typography variant={mini ? "subtitle2" : "h6"}>
                 <ProductPrice product={product} />
               </Typography>
             </Box>

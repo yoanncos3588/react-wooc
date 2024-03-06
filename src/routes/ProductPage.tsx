@@ -11,6 +11,7 @@ import ProductImages from "../components/ProductImages";
 import { useEffect, useState } from "react";
 import SelectAttribute, { SelectedAttributes } from "../components/SelectAttribute";
 import Loading from "../components/Loading";
+import ProductsRelated from "../components/ProductsRelated";
 
 const ProductPage = () => {
   const { id } = useParams() as { id: string }; // error should happens in router
@@ -91,42 +92,50 @@ const ProductPage = () => {
       {isLoadingVariations ? (
         <Loading />
       ) : (
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={6}>
-            <ProductImages productImages={images} withThumbnails />
+        <>
+          <Grid container spacing={4}>
+            <Grid item xs={12} md={6}>
+              <ProductImages productImages={images} withThumbnails />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              {product.categories.map((c, index) => (
+                <Link component={RouterLink} to={`/category/${c.slug}/${c.id}`} sx={{ mr: index === product.categories.length - 1 ? 0 : 1 }} key={c.id}>
+                  {c.name}
+                </Link>
+              ))}
+              <Typography component="div" dangerouslySetInnerHTML={{ __html: descriptionSanitized }} />
+              <Divider sx={{ my: 2 }} />
+
+              {product.attributes.map(
+                (productAttribute) =>
+                  productAttribute.id !== 0 && (
+                    <Box mb={theme.spacing(2)} key={productAttribute.id}>
+                      <SelectAttribute
+                        productAttribute={productAttribute}
+                        setSelectedAttributes={setSelectedAttributes}
+                        selectedAttributes={selectedAttributes}
+                      />
+                    </Box>
+                  )
+              )}
+
+              <Box sx={{ display: "flex", flexDirection: ["column", "row"], gap: 2 }}>
+                <ProductPrice product={matchingVariation ? matchingVariation : product} sx={{ fontSize: theme.typography.h4 }} />
+                <Button variant={"contained"} color="success" disabled={!isAddToCartEnabled}>
+                  Ajouter au panier
+                </Button>
+              </Box>
+
+              <Divider sx={{ my: 2 }} />
+            </Grid>
           </Grid>
-          <Grid item xs={12} md={6}>
-            {product.categories.map((c, index) => (
-              <Link component={RouterLink} to={`/category/${c.slug}/${c.id}`} sx={{ mr: index === product.categories.length - 1 ? 0 : 1 }} key={c.id}>
-                {c.name}
-              </Link>
-            ))}
-            <Typography component="div" dangerouslySetInnerHTML={{ __html: descriptionSanitized }} />
-            <Divider sx={{ my: 2 }} />
 
-            {product.attributes.map(
-              (productAttribute) =>
-                productAttribute.id !== 0 && (
-                  <Box mb={theme.spacing(2)} key={productAttribute.id}>
-                    <SelectAttribute
-                      productAttribute={productAttribute}
-                      setSelectedAttributes={setSelectedAttributes}
-                      selectedAttributes={selectedAttributes}
-                    />
-                  </Box>
-                )
-            )}
-
-            <Box sx={{ display: "flex", flexDirection: ["column", "row"], gap: 2 }}>
-              <ProductPrice product={matchingVariation ? matchingVariation : product} sx={{ fontSize: theme.typography.h4 }} />
-              <Button variant={"contained"} color="success" disabled={!isAddToCartEnabled}>
-                Ajouter au panier
-              </Button>
+          {product.relatedIds.length > 0 && (
+            <Box mt={5}>
+              <ProductsRelated product={product} />
             </Box>
-
-            <Divider sx={{ my: 2 }} />
-          </Grid>
-        </Grid>
+          )}
+        </>
       )}
     </>
   );
