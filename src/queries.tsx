@@ -10,7 +10,7 @@ interface dataHeaders {
   total: string;
 }
 
-export interface formatedDataResponseType<T> {
+export interface FormatedDataResponseType<T> {
   headers?: dataHeaders;
   data: T;
 }
@@ -31,8 +31,8 @@ function formatDataToCamelCase(data: unknown) {
 /**
  * clean axio's response
  */
-function formatDataResponse(response: AxiosResponse<unknown, unknown>): formatedDataResponseType<unknown> {
-  const dataResponse: formatedDataResponseType<unknown> = {
+function formatDataResponse(response: AxiosResponse<unknown, unknown>): FormatedDataResponseType<unknown> {
+  const dataResponse: FormatedDataResponseType<unknown> = {
     data: formatDataToCamelCase(response.data),
   };
   if (response.headers["x-wp-totalpages"] && response.headers["x-wp-total"]) {
