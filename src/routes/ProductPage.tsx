@@ -26,6 +26,7 @@ const ProductPage = () => {
   };
 
   const product = dataProduct.data;
+  const isProductVariable = product.type === "variable";
 
   // since wc rest api doesn't allow to query variations by attribute's value, we have to load all variations...
   // load variations only if product is variable and if an attributes has been chosen
@@ -37,7 +38,7 @@ const ProductPage = () => {
     productVariationsQuery(
       id,
       { per_page: 100, page: currentVariationsPage },
-      { enabled: product.type === "variable" && Object.keys(selectedAttributes).length > 0, keepPreviousData: true }
+      { enabled: isProductVariable && Object.keys(selectedAttributes).length > 0, keepPreviousData: true }
     )
   ) as { data: FormatedDataResponseType<ProductVariation[]>; isFetched: boolean; isLoading: boolean };
 
@@ -84,7 +85,7 @@ const ProductPage = () => {
 
   const descriptionSanitized = DOMPurify.sanitize(product.description);
   const images = matchingVariation ? [matchingVariation.image] : product.images;
-  const isAddToCartEnabled = product.type === "simple" || (product.type === "variable" && typeof matchingVariation !== "undefined");
+  const isAddToCartEnabled = !isProductVariable || (isProductVariable && typeof matchingVariation !== "undefined");
 
   return (
     <>
@@ -106,18 +107,19 @@ const ProductPage = () => {
               <Typography component="div" dangerouslySetInnerHTML={{ __html: descriptionSanitized }} />
               <Divider sx={{ my: 2 }} />
 
-              {product.attributes.map(
-                (productAttribute) =>
-                  productAttribute.id !== 0 && (
-                    <Box mb={theme.spacing(2)} key={productAttribute.id}>
-                      <SelectAttribute
-                        productAttribute={productAttribute}
-                        setSelectedAttributes={setSelectedAttributes}
-                        selectedAttributes={selectedAttributes}
-                      />
-                    </Box>
-                  )
-              )}
+              {isProductVariable &&
+                product.attributes.map(
+                  (productAttribute) =>
+                    productAttribute.id !== 0 && (
+                      <Box mb={theme.spacing(2)} key={productAttribute.id}>
+                        <SelectAttribute
+                          productAttribute={productAttribute}
+                          setSelectedAttributes={setSelectedAttributes}
+                          selectedAttributes={selectedAttributes}
+                        />
+                      </Box>
+                    )
+                )}
 
               <Box sx={{ display: "flex", flexDirection: ["column", "row"], gap: 2 }}>
                 <ProductPrice product={matchingVariation ? matchingVariation : product} sx={{ fontSize: theme.typography.h4 }} />
