@@ -3,7 +3,7 @@ import PageTitle from "../components/PageTitle";
 import { useParams } from "react-router-dom";
 import { FormatedDataResponseType, productQuery, productVariationsQuery } from "../queries";
 import { Product, ProductVariation } from "../types/products";
-import { Box, Button, Divider, Grid, Link, Typography, useTheme } from "@mui/material";
+import { Box, Divider, Grid, Link, Typography, useTheme } from "@mui/material";
 import DOMPurify from "dompurify";
 import { Link as RouterLink } from "react-router-dom";
 import ProductPrice from "../components/ProductPrice";
@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import SelectAttribute, { SelectedAttributes } from "../components/SelectAttribute";
 import Loading from "../components/Loading";
 import ProductsRelated from "../components/ProductsRelated";
+import AddToCart from "../components/AddToCart";
 
 const ProductPage = () => {
   const { id } = useParams() as { id: string }; // error should happens in router
@@ -85,7 +86,7 @@ const ProductPage = () => {
 
   const descriptionSanitized = DOMPurify.sanitize(product.description);
   const images = matchingVariation ? [matchingVariation.image] : product.images;
-  const isAddToCartEnabled = !isProductVariable || (isProductVariable && typeof matchingVariation !== "undefined");
+  const isAddToCartDisabled = isProductVariable && !matchingVariation;
 
   return (
     <>
@@ -123,9 +124,7 @@ const ProductPage = () => {
 
               <Box sx={{ display: "flex", flexDirection: ["column", "row"], gap: 2 }}>
                 <ProductPrice product={matchingVariation ? matchingVariation : product} sx={{ fontSize: theme.typography.h4 }} />
-                <Button variant={"contained"} color="success" disabled={!isAddToCartEnabled}>
-                  Ajouter au panier
-                </Button>
+                <AddToCart product={product} productVariation={matchingVariation} disabled={isAddToCartDisabled} />
               </Box>
 
               <Divider sx={{ my: 2 }} />

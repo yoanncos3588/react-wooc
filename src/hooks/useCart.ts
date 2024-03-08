@@ -37,6 +37,10 @@ export const useCart = () => {
     });
   }
 
+  function emptyCart() {
+    setCart([]);
+  }
+
   /**
    * find item in current cart
    */
@@ -59,7 +63,7 @@ export const useCart = () => {
       name: product.name,
       productId: product.id,
       quantity: 1,
-      total: calculatePrice(variation ? variation : product, 1),
+      total: calculPrice(variation ? variation : product, 1),
       ...(variation && { variationId: variation.id }),
     };
   }
@@ -67,9 +71,9 @@ export const useCart = () => {
   /**
    * Calcul price only for FO before checkout, final prices are calculated when order is created in BO
    */
-  function calculatePrice(product: Product | ProductVariation, quantity: number): string {
+  function calculPrice(product: Product | ProductVariation, quantity: number): string {
     return (Number(product.price) * quantity).toFixed(2);
   }
 
-  return { cart, response, add, remove, updateQuantity };
+  return { cart, response, add, remove, updateQuantity, emptyCart, findItemInCart };
 };
