@@ -34,16 +34,19 @@ export interface Order {
   setPaid: boolean;
 }
 
-export interface LineItem {
-  id: number;
+export interface LineItemLS {
   name: string;
   productId: number;
   variationId?: number;
   quantity: number;
+  total: string;
+}
+
+export interface LineItem extends LineItemLS {
+  id: number;
   taxClass: string;
   subtotal: string;
   subtotalTax: string;
-  total: string;
   totalTax: string;
   taxes: Array<Taxe>;
   meta_data: Array<MetaData>;
