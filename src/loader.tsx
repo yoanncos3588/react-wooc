@@ -24,8 +24,11 @@ export const categoriesLoader = (queryClient: QueryClient) => async () => {
 
 export const productLoader =
   (queryClient: QueryClient) =>
-  async ({ params }: { params: { id: string }; request: Request }) => {
+  async ({ params }: { params: Params<"id"> }) => {
     const { id } = params;
+    if (!id) {
+      throw new Response("Produit introuvable", { status: 404 });
+    }
     const res = await queryClient.ensureQueryData(productQuery(id));
     return res;
   };
