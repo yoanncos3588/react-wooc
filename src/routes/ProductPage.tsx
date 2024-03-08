@@ -3,7 +3,7 @@ import PageTitle from "../components/PageTitle";
 import { useParams } from "react-router-dom";
 import { FormatedDataResponseType, productQuery, productVariationsQuery } from "../queries";
 import { Product, ProductVariation } from "../types/products";
-import { Box, Divider, Grid, Link, Typography, useTheme } from "@mui/material";
+import { Box, Button, Chip, Divider, Grid, Link, Stack, Typography, useTheme } from "@mui/material";
 import DOMPurify from "dompurify";
 import { Link as RouterLink } from "react-router-dom";
 import ProductPrice from "../components/ProductPrice";
@@ -100,11 +100,18 @@ const ProductPage = () => {
               <ProductImages productImages={images} withThumbnails />
             </Grid>
             <Grid item xs={12} md={6}>
-              {product.categories.map((c, index) => (
-                <Link component={RouterLink} to={`/category/${c.slug}/${c.id}`} sx={{ mr: index === product.categories.length - 1 ? 0 : 1 }} key={c.id}>
-                  {c.name}
-                </Link>
-              ))}
+              <Stack spacing={1} direction="row">
+                {product.categories.map((c, index) => (
+                  <Chip
+                    component={RouterLink}
+                    to={`/category/${c.slug}/${c.id}`}
+                    sx={{ mr: index === product.categories.length - 1 ? 0 : 1 }}
+                    key={c.id}
+                    label={c.name}
+                    clickable
+                  />
+                ))}
+              </Stack>
               <Typography component="div" dangerouslySetInnerHTML={{ __html: descriptionSanitized }} />
               <Divider sx={{ my: 2 }} />
 

@@ -10,7 +10,7 @@ import FilterProducts from "../components/FilterProducts";
 import { buildApiParams } from "../services/filters/products";
 import { ProductCategorie } from "../types/categories";
 import { Product } from "../types/products";
-import CategoryNav from "../components/CategoryNav";
+import CategoryNavChip from "../components/CategoryNavChip";
 
 export interface CategoryPageUrlParams {
   id: string;
@@ -39,7 +39,7 @@ const CategoryPage = () => {
       {products && category && (
         <>
           <PageTitle title={category.name}>
-            <CategoryNav activCategory={category} />
+            <CategoryNavChip activCategory={category} />
           </PageTitle>
 
           <Typography component="div" variant="caption" sx={{ mb: theme.spacing(4) }}>
