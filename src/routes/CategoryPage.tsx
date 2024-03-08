@@ -10,7 +10,6 @@ import FilterProducts from "../components/FilterProducts";
 import { buildApiParams } from "../services/filters/products";
 import { ProductCategorie } from "../types/categories";
 import { Product } from "../types/products";
-import CategoryNav from "../components/CategoryNav";
 import CategoryNavChip from "../components/CategoryNavChip";
 
 export interface CategoryPageUrlParams {
