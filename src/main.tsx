@@ -21,6 +21,7 @@ import LoginPage from "./routes/LoginPage";
 import { RouteProtected } from "./components/RouteProtected";
 import AuthProvider from "./context/AuthContext";
 import { RouteForGuestOnly } from "./components/RouteForGuestOnly";
+import CartProvider from "./context/CartContext";
 
 export const queryClient = new QueryClient();
 
@@ -72,7 +73,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <AuthProvider>
-          <RouterProvider router={router} />
+          <CartProvider>
+            <RouterProvider router={router} />
+          </CartProvider>
         </AuthProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </ThemeProvider>

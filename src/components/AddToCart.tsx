@@ -20,7 +20,7 @@ const AddToCart = ({ product, productVariation, disabled }: Props) => {
         {isAlreadyInCart ? "Produit dans votre panier" : "Ajouter au panier"}
       </Button>
       {isAlreadyInCart && (
-        <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => remove(product.id, productVariation?.id)}>
+        <Button aria-label="Retirer du panier" variant="outlined" startIcon={<DeleteIcon />} onClick={() => remove(product.id, productVariation?.id)}>
           Retirer
         </Button>
       )}

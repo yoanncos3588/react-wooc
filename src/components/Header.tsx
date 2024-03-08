@@ -1,12 +1,11 @@
 import Logo from "./Logo";
 import { useTheme } from "@mui/material/styles";
-import { AppBar, Box, IconButton, Toolbar } from "@mui/material";
+import { AppBar, Badge, Box, IconButton, Toolbar } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { Link as RouterLink } from "react-router-dom";
 import NavMain from "./NavMain";
 import ButtonMyAccount from "./ButtonMyAccount";
 import { hideUpMd, showUpMd } from "../styled/utils";
+import CartButton from "./CartButton";
 
 interface Props {
   toggleDrawer: (event: React.KeyboardEvent | React.MouseEvent) => void;
@@ -37,9 +36,7 @@ const Header = ({ toggleDrawer }: Props) => {
           <ButtonMyAccount />
         </Box>
         {/** CART */}
-        <IconButton component={RouterLink} to="#" aria-label="mon panier" size="large" sx={{ px: 2 }} edge="end">
-          <ShoppingCartIcon />
-        </IconButton>
+        <CartButton />
       </Toolbar>
     </AppBar>
   );
