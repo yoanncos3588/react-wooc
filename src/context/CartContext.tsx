@@ -94,6 +94,7 @@ const CartProvider = ({ children }: Props) => {
       total: calculPrice(variation ? variation.price : product.price, 1),
       variationId: variation?.id,
       attributes: variation?.attributes,
+      imageUrl: variation ? (variation.image ? variation.image.src : undefined) : product.images[0] ? product.images[0].src : undefined,
     };
   }
 

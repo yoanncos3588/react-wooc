@@ -44,6 +44,7 @@ export interface LineItemLS {
   quantity: number;
   total: string;
   attributes: VariationAttributes[] | undefined;
+  imageUrl: string | undefined;
 }
 
 export interface LineItem extends LineItemLS {

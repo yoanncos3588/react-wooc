@@ -21,9 +21,13 @@ const CartDetail = () => {
       {cart.map((lineItem) => (
         <ListItem key={lineItem.variationId ? lineItem.variationId : lineItem.productId}>
           <ListItemAvatar>
-            <Avatar>
-              <ImageIcon />
-            </Avatar>
+            {lineItem.imageUrl ? (
+              <Avatar src={lineItem.imageUrl} />
+            ) : (
+              <Avatar>
+                <ImageIcon />
+              </Avatar>
+            )}
           </ListItemAvatar>
           <Box className="ListLineItemsStyled__link">
             <Link to={`/product/${lineItem.slug}/${lineItem.productId}`}>
