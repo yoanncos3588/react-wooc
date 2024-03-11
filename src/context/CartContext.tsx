@@ -14,7 +14,7 @@ interface CartProviderValue {
   updateQuantity: (lineItemToUpdate: LineItemLS, quantity: number) => void;
   emptyCart: () => void;
   findItemInCart: (productId: number, variationId: number | undefined) => LineItemLS | undefined;
-  getTotalPrice: () => number;
+  getTotalPrice: () => string;
 }
 
 interface Props {
@@ -59,7 +59,12 @@ const CartProvider = ({ children }: Props) => {
   }
 
   function getTotalPrice() {
-    return cart.map((lineItem) => Number(lineItem.total)).reduce((total, price) => total + price, 0);
+    const totalPrice = cart
+      .map((lineItem) => Number(lineItem.total))
+      .reduce((total, price) => {
+        return total + price;
+      }, 0);
+    return totalPrice.toFixed(2);
   }
 
   /**

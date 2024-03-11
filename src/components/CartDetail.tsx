@@ -7,7 +7,7 @@ import { useCart } from "../hooks/useCart";
 
 const CartDetail = () => {
   const { cart, updateQuantity, remove } = useCart();
-  return (
+  return cart.length >= 1 ? (
     <ListLineItemsStyled>
       {cart.map((lineItem) => (
         <ListItem key={lineItem.variationId ? lineItem.variationId : lineItem.productId}>
@@ -41,6 +41,10 @@ const CartDetail = () => {
         </ListItem>
       ))}
     </ListLineItemsStyled>
+  ) : (
+    <Typography variant="h5" p={4}>
+      Aucun article dans votre panier
+    </Typography>
   );
 };
 
