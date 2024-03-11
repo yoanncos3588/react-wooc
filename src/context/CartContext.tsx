@@ -92,7 +92,8 @@ const CartProvider = ({ children }: Props) => {
       slug: product.slug,
       price: variation ? variation.price : product.price,
       total: calculPrice(variation ? variation.price : product.price, 1),
-      ...(variation && { variationId: variation.id, attributes: variation.attributes }),
+      variationId: variation?.id,
+      attributes: variation?.attributes,
     };
   }
 

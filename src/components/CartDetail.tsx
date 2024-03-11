@@ -4,9 +4,18 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ListLineItemsStyled from "../styled/ListLineItems";
 import { Link } from "react-router-dom";
 import { useCart } from "../hooks/useCart";
+import { LineItemLS } from "../types/order";
 
 const CartDetail = () => {
   const { cart, updateQuantity, remove } = useCart();
+
+  function generateSecondaryText(lineItem: LineItemLS) {
+    const price = `prix unitaire : ${Number(lineItem.price).toFixed(2)} €`;
+    const attributesText = lineItem.attributes ? lineItem.attributes.map((a) => `${a.name.toLowerCase()} : ${a.option.toLowerCase()}`) : undefined;
+    const attributes = attributesText ? attributesText?.join(" | ") : undefined;
+    return `${price} ${attributes ? " | " + attributes : ""}`;
+  }
+
   return cart.length >= 1 ? (
     <ListLineItemsStyled>
       {cart.map((lineItem) => (
@@ -17,8 +26,8 @@ const CartDetail = () => {
             </Avatar>
           </ListItemAvatar>
           <Box className="ListLineItemsStyled__link">
-            <Link to={`/products/${lineItem.slug}/${lineItem.productId}`}>
-              <ListItemText primary={lineItem.name} />
+            <Link to={`/product/${lineItem.slug}/${lineItem.productId}`}>
+              <ListItemText primary={lineItem.name} secondary={generateSecondaryText(lineItem)} />
             </Link>
           </Box>
           <Stack direction={"row"} spacing={3}>

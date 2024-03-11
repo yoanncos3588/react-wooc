@@ -1,4 +1,5 @@
 import { LocationInfos, ShippingInfos } from "./billingShipping";
+import { ProductAttributes, VariationAttributes } from "./products";
 
 export interface Order {
   id: number;
@@ -37,11 +38,12 @@ export interface Order {
 export interface LineItemLS {
   name: string;
   productId: number;
-  variationId?: number;
+  variationId?: number | undefined;
   slug: string;
   price: string;
   quantity: number;
   total: string;
+  attributes: VariationAttributes[] | undefined;
 }
 
 export interface LineItem extends LineItemLS {
