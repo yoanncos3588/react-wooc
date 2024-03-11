@@ -10,14 +10,14 @@ const NavMain = () => {
 
   return (
     <>
-      {data &&
-        data.data.map((category) => (
-          <StyledNavMain key={category.id}>
-            <Button component={RouterLink} variant="text" sx={{ color: "white" }} to={`/category/${category.slug}/${category.id}`}>
+      <StyledNavMain>
+        {data &&
+          data.data.map((category) => (
+            <Button component={RouterLink} variant="text" sx={{ color: "white" }} to={`/category/${category.slug}/${category.id}`} key={category.id}>
               {category.name}
             </Button>
-          </StyledNavMain>
-        ))}
+          ))}
+      </StyledNavMain>
     </>
   );
 };

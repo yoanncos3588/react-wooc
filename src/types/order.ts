@@ -38,6 +38,8 @@ export interface LineItemLS {
   name: string;
   productId: number;
   variationId?: number;
+  slug: string;
+  price: string;
   quantity: number;
   total: string;
 }

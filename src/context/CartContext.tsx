@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { LineItemLS } from "../types/Order";
+import { LineItemLS } from "../types/order";
 import { Product, ProductVariation } from "../types/products";
 
 export const CartContext = createContext<CartProviderValue>({} as CartProviderValue);
@@ -11,7 +11,7 @@ interface CartProviderValue {
   response: string | undefined;
   add: (product: Product, variation: ProductVariation | undefined) => void;
   remove: (productId: number, variationId: number | undefined) => void;
-  updateQuantity: (productId: number, variationId: number | undefined, quantity: number) => void;
+  updateQuantity: (lineItemToUpdate: LineItemLS, quantity: number) => void;
   emptyCart: () => void;
   findItemInCart: (productId: number, variationId: number | undefined) => LineItemLS | undefined;
   getTotalPrice: () => number;
@@ -42,11 +42,11 @@ const CartProvider = ({ children }: Props) => {
     setCart((prev) => prev.filter((lineItem) => !isProductOrVariation(lineItem, productId, variationId)));
   }
 
-  function updateQuantity(productId: number, variationId: number | undefined = undefined, quantity: number) {
+  function updateQuantity(lineItemToUpdate: LineItemLS, quantity: number) {
     setCart((prev) => {
       return prev.map((lineItem) => {
-        if (isProductOrVariation(lineItem, productId, variationId)) {
-          return { ...lineItem, quantity: quantity };
+        if (lineItemToUpdate.productId === lineItem.productId && lineItem.variationId === lineItem.variationId) {
+          return { ...lineItem, quantity: quantity, total: calculPrice(lineItem.price, quantity) };
         } else {
           return lineItem;
         }
@@ -84,16 +84,18 @@ const CartProvider = ({ children }: Props) => {
       name: product.name,
       productId: product.id,
       quantity: 1,
-      total: calculPrice(variation ? variation : product, 1),
-      ...(variation && { variationId: variation.id }),
+      slug: product.slug,
+      price: variation ? variation.price : product.price,
+      total: calculPrice(variation ? variation.price : product.price, 1),
+      ...(variation && { variationId: variation.id, attributes: variation.attributes }),
     };
   }
 
   /**
    * Calcul price only for FO before checkout, final prices are calculated when order is created in BO
    */
-  function calculPrice(product: Product | ProductVariation, quantity: number): string {
-    return (Number(product.price) * quantity).toFixed(2);
+  function calculPrice(price: string, quantity: number): string {
+    return (Number(price) * quantity).toFixed(2);
   }
   return (
     <CartContext.Provider value={{ cart, response, add, remove, updateQuantity, emptyCart, findItemInCart, getTotalPrice }}>{children}</CartContext.Provider>

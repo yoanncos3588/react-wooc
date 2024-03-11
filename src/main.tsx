@@ -22,6 +22,7 @@ import { RouteProtected } from "./components/RouteProtected";
 import AuthProvider from "./context/AuthContext";
 import { RouteForGuestOnly } from "./components/RouteForGuestOnly";
 import CartProvider from "./context/CartContext";
+import CartPage from "./routes/CartPage";
 
 export const queryClient = new QueryClient();
 
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
         path: "category/:slug/:id",
         element: <CategoryPage />,
         loader: categoryProductsLoader(queryClient),
+      },
+      {
+        path: "cart/",
+        element: <CartPage />,
       },
     ],
   },
