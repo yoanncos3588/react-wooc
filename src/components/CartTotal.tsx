@@ -2,7 +2,7 @@ import { Typography, Box, Divider, Button } from "@mui/material";
 import { useCart } from "../hooks/useCart";
 
 const CartTotal = () => {
-  const { cart, getTotalPrice } = useCart();
+  const { cart, getTotalPrice, emptyCart } = useCart();
 
   return (
     <>
@@ -25,6 +25,9 @@ const CartTotal = () => {
 
       <Button variant="contained" color="success" fullWidth sx={{ mt: 3 }} disabled={!(cart.length >= 1)}>
         Commander
+      </Button>
+      <Button variant="outlined" color="error" fullWidth sx={{ mt: 3 }} disabled={!(cart.length >= 1)} onClick={() => emptyCart()}>
+        Vider mon panier
       </Button>
     </>
   );
