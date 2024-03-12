@@ -1,8 +1,16 @@
 import { Typography, Box, Divider, Button } from "@mui/material";
 import { useCart } from "../hooks/useCart";
+import { useDialog } from "../hooks/useDialog";
 
 const CartTotal = () => {
   const { cart, getTotalPrice, emptyCart } = useCart();
+  const { dialog } = useDialog();
+
+  async function handleClickEmpty() {
+    if (await dialog({ title: "Vider mon panier", content: "Confirmer cette action supprimera tous les articles de votre panier" })) {
+      emptyCart();
+    }
+  }
 
   return (
     <>
@@ -26,7 +34,7 @@ const CartTotal = () => {
       <Button variant="contained" color="success" fullWidth sx={{ mt: 3 }} disabled={!(cart.length >= 1)}>
         Commander
       </Button>
-      <Button variant="outlined" color="error" fullWidth sx={{ mt: 3 }} disabled={!(cart.length >= 1)} onClick={() => emptyCart()}>
+      <Button variant="outlined" color="error" fullWidth sx={{ mt: 3 }} disabled={!(cart.length >= 1)} onClick={handleClickEmpty}>
         Vider mon panier
       </Button>
     </>
