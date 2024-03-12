@@ -1,8 +1,9 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 import { useContext, useRef, useState } from "react";
 import { DialogContext, DialogProps } from "../context/DialogContext";
+import FormLogin from "./FormLogin";
 
-function DialogConfirmation() {
+function DialogWithPromise() {
   const [open, setOpen] = useState(false);
   const [props, setProps] = useState<undefined | DialogProps>();
 
@@ -30,15 +31,20 @@ function DialogConfirmation() {
   return (
     <Dialog sx={{ "& .MuiDialog-paper": { width: "80%", maxHeight: 435 } }} maxWidth="xs" open={open}>
       {props && props.title && <DialogTitle>{props.title}</DialogTitle>}
-      <DialogContent dividers>{props && props.content ? props.content : "Confirmer cette action ?"}</DialogContent>
-      <DialogActions>
-        <Button autoFocus onClick={handleCancel}>
-          Annuler
-        </Button>
-        <Button onClick={handleOk}>Confirmer</Button>
-      </DialogActions>
+      <DialogContent dividers>
+        {props && props.type === "confirm" && <>{props && props.content ? props.content : "Confirmer cette action ?"}</>}
+        {props && props.type === "login" && <FormLogin handleSuccess={handleOk} handleSignup={handleCancel} />}
+      </DialogContent>
+      {props && props.type === "confirm" && (
+        <DialogActions>
+          <Button autoFocus onClick={handleCancel}>
+            Annuler
+          </Button>
+          <Button onClick={handleOk}>Confirmer</Button>
+        </DialogActions>
+      )}
     </Dialog>
   );
 }
 
-export default DialogConfirmation;
+export default DialogWithPromise;

@@ -1,26 +1,38 @@
-import { Alert, Box, Button, Grid } from "@mui/material";
+import { Alert, Box, Button, Grid, Stack } from "@mui/material";
 import theme from "../theme";
 import TextFieldWithValidation from "./TextFieldWithValidation";
 import validation from "../services/validation/validation";
 import { api } from "../services/api/api";
-import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { FormEvent } from "react";
 import Loading from "./Loading";
 import { useAuth } from "../hooks/useAuth";
+import { AxiosError } from "axios";
+import DOMPurify from "dompurify";
+import { useNavigate } from "react-router-dom";
 
-const FormLogin = () => {
-  const navigate = useNavigate();
+interface Props {
+  handleSuccess: () => void;
+  handleSignup?: () => void;
+}
+
+const FormLogin = ({ handleSuccess, handleSignup }: Props) => {
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   const mutation = useMutation({
-    mutationFn: ({ username, password }: { username: string; password: string }) => api.customer.login({ username, password }),
+    mutationFn: ({ username, password }: { username: string; password: string }) => {
+      return api.customer.login({ username, password });
+    },
+
     onSuccess: (data) => {
       login && login(data);
       setTimeout(() => {
-        navigate("/");
+        handleSuccess();
       }, 3000);
     },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onError: (_error: AxiosError<{ code: string; message: string }>) => {},
   });
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -34,6 +46,14 @@ const FormLogin = () => {
     if (isDataValid) {
       mutation.mutate({ username, password });
     }
+  }
+
+  /** if more action are needed before redirecting (ex: closing dialog) */
+  function handleClickSignup() {
+    if (handleSignup) {
+      handleSignup();
+    }
+    navigate("/signup");
   }
 
   return (
@@ -50,24 +70,26 @@ const FormLogin = () => {
         </Grid>
         {mutation.isSuccess && (
           <Alert severity="success" variant="filled" sx={{ mt: theme.spacing(1) }} data-test-id="alert-success">
-            Connexion réussie, vous allez être redirigé…
+            Connexion réussie, veuillez patienter…
           </Alert>
         )}
         {mutation.isError && (
           <Alert severity="error" variant="filled" sx={{ mt: theme.spacing(1) }} data-test-id="alert-error">
-            Une erreur est survenue : {mutation.error.message}
+            <span
+              dangerouslySetInnerHTML={{
+                __html: mutation.error.response?.data.message ? DOMPurify.sanitize(mutation.error.response?.data.message) : "Une erreur est survenue",
+              }}
+            />
           </Alert>
         )}
-        <Button
-          variant="contained"
-          color="success"
-          sx={{ mt: theme.spacing(4) }}
-          disabled={mutation.isPending || mutation.isSuccess}
-          type="submit"
-          data-test-id="btn-send-data"
-        >
-          Se connecter
-        </Button>
+        <Stack direction={"row"} gap={2} alignItems={"center"} mt={4}>
+          <Button variant="contained" color="success" disabled={mutation.isPending || mutation.isSuccess} type="submit" data-test-id="btn-send-data">
+            Se connecter
+          </Button>
+          <Button variant="text" onClick={handleClickSignup}>
+            Se créer un compte
+          </Button>
+        </Stack>
       </Box>
     </>
   );

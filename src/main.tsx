@@ -23,7 +23,6 @@ import AuthProvider from "./context/AuthContext";
 import { RouteForGuestOnly } from "./components/RouteForGuestOnly";
 import CartProvider from "./context/CartContext";
 import CartPage from "./routes/CartPage";
-import DialogProvider from "./context/DialogContext";
 
 export const queryClient = new QueryClient();
 
@@ -80,9 +79,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <CssBaseline />
         <AuthProvider>
           <CartProvider>
-            <DialogProvider>
-              <RouterProvider router={router} />
-            </DialogProvider>
+            <RouterProvider router={router}></RouterProvider>
           </CartProvider>
         </AuthProvider>
         <ReactQueryDevtools initialIsOpen={false} />

@@ -1,9 +1,10 @@
 import { ComponentProps, PropsWithChildren, createContext, useRef } from "react";
-import DialogConfirmation from "../components/DialogConfirmation";
+import DialogConfirmation from "../components/DialogWithPromise";
 
 export type DialogProps = Partial<Omit<ComponentProps<typeof DialogConfirmation>, "open" | "handleOk" | "handleCancel">> & {
+  type: "confirm" | "login";
   title?: string;
-  content?: string;
+  content?: string | JSX.Element;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

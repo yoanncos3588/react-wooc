@@ -16,6 +16,9 @@ const FormUser = () => {
 
   const mutation = useMutation({
     mutationFn: (customer: Customer) => api.customer.create(customer),
+    onError: (error) => {
+      console.log("error", error);
+    },
     onSuccess: () => {
       setTimeout(() => {
         navigate("/login");

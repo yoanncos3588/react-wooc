@@ -49,6 +49,7 @@ axiosInstanceWp.interceptors.response.use(
     if (code === "jwt_auth_invalid_token" || code === "jwt_auth_invalid_token") {
       localStorage.removeItem("user");
     }
+    return Promise.reject(error);
   }
 );
 

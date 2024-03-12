@@ -1,15 +1,29 @@
 import { Typography, Box, Divider, Button } from "@mui/material";
 import { useCart } from "../hooks/useCart";
 import { useDialog } from "../hooks/useDialog";
+import { useAuth } from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const CartTotal = () => {
   const { cart, getTotalPrice, emptyCart } = useCart();
+  const { user } = useAuth();
   const { dialog } = useDialog();
+  const navigate = useNavigate();
 
   async function handleClickEmpty() {
-    if (await dialog({ title: "Vider mon panier", content: "Confirmer cette action supprimera tous les articles de votre panier" })) {
+    if (await dialog({ type: "confirm", title: "Vider mon panier", content: "Confirmer cette action supprimera tous les articles de votre panier" })) {
       emptyCart();
     }
+  }
+
+  async function handleClickOrder() {
+    if (!user) {
+      if (!(await dialog({ type: "login", title: "Vous devez vous connecter pour commander" }))) {
+        return;
+      }
+    }
+    console.log("ready to create order");
+    navigate("/");
   }
 
   return (
@@ -31,7 +45,7 @@ const CartTotal = () => {
         <Typography fontWeight={"700"}>{getTotalPrice()} €</Typography>
       </Box>
 
-      <Button variant="contained" color="success" fullWidth sx={{ mt: 3 }} disabled={!(cart.length >= 1)}>
+      <Button variant="contained" color="success" fullWidth sx={{ mt: 3 }} disabled={!(cart.length >= 1)} onClick={handleClickOrder}>
         Commander
       </Button>
       <Button variant="outlined" color="error" fullWidth sx={{ mt: 3 }} disabled={!(cart.length >= 1)} onClick={handleClickEmpty}>
