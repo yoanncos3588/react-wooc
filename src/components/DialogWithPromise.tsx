@@ -1,6 +1,7 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 import { useContext, useRef, useState } from "react";
 import { DialogContext, DialogProps } from "../context/DialogContext";
+import type { DialogProps } from "@mui/material";
 import FormLogin from "./FormLogin";
 
 function DialogWithPromise() {
@@ -29,7 +30,7 @@ function DialogWithPromise() {
   };
 
   return (
-    <Dialog sx={{ "& .MuiDialog-paper": { width: "80%", maxHeight: 435 } }} maxWidth="xs" open={open}>
+    <Dialog sx={{ "& .MuiDialog-paper": { width: "80%", maxHeight: 435 } }} maxWidth="xs" open={open} onClose={handleCancel}>
       {props && props.title && <DialogTitle>{props.title}</DialogTitle>}
       <DialogContent dividers>
         {props && props.type === "confirm" && <>{props && props.content ? props.content : "Confirmer cette action ?"}</>}
