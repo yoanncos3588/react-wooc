@@ -1,7 +1,6 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 import { useContext, useRef, useState } from "react";
 import { DialogContext, DialogProps } from "../context/DialogContext";
-import type { DialogProps } from "@mui/material";
 import FormLogin from "./FormLogin";
 
 function DialogWithPromise() {
