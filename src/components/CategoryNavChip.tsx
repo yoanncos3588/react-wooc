@@ -3,6 +3,7 @@ import { categoriesQuery, FormatedDataResponseType } from "../queries";
 import { ProductCategorie } from "../types/categories";
 import { Chip, Stack, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
+import React from "react";
 
 interface Props {
   activCategory: ProductCategorie;
@@ -25,11 +26,7 @@ const CategoryNavChip = ({ activCategory }: Props) => {
   const parentTabs = generateChips(parentCategories, true);
   const siblingsTabs = generateChips(siblingsCategories, !!(childsTabs.length > 0));
 
-  function generateChips(
-    categories: Array<ProductCategorie>,
-    // color: "default" | "primary" | "secondary" | "error" | "info" | "success" | "warning" = "primary"
-    withDelimiter: boolean = false
-  ): Array<JSX.Element> {
+  function generateChips(categories: Array<ProductCategorie>, withDelimiter: boolean = false): Array<JSX.Element> {
     return categories.map((c, index) => {
       const isActiv = c.id === activCategory.id;
       const props = {
@@ -43,14 +40,14 @@ const CategoryNavChip = ({ activCategory }: Props) => {
         clickable: true,
       };
       return (
-        <>
+        <React.Fragment key={c.id}>
           <Chip {...props} {...(!isActiv && propsLink)} variant={isActiv ? "outlined" : "filled"} sx={{ opacity: isActiv ? 0.3 : 1 }} />
           {index === categories.length - 1 && withDelimiter && (
             <Typography mx={2} sx={{ display: "flex", alignItems: "center", opacity: 0.2 }}>
               /
             </Typography>
           )}
-        </>
+        </React.Fragment>
       );
     });
   }
