@@ -1,7 +1,16 @@
 import { LocationInfos, ShippingInfos } from "./billingShipping";
-import { ProductAttributes, VariationAttributes } from "./products";
+import { VariationAttributes } from "./products";
 
-export interface Order {
+export interface OrderBeforePOST {
+  customerId: number;
+  customerNote: string;
+  billing: LocationInfos;
+  shipping: ShippingInfos;
+  lineItemsLS: Array<LineItemLS>;
+  setPaid: boolean;
+}
+
+export interface Order extends Omit<OrderBeforePOST, "lineItemsLS"> {
   id: number;
   parentId: number;
   number: string;
@@ -20,10 +29,6 @@ export interface Order {
   total: string;
   totalTax: string;
   princesIncludeTax: boolean;
-  customerId: number;
-  customerNote: string;
-  billing: LocationInfos;
-  shipping: ShippingInfos;
   paymentMethod: string;
   paymentMethodTitle: string;
   datePaid: Date;
@@ -32,7 +37,6 @@ export interface Order {
   lineItems: Array<LineItem>;
   taxLines: Array<Taxe>;
   shippingLines: Array<ShippingLine>;
-  setPaid: boolean;
 }
 
 export interface LineItemLS {
