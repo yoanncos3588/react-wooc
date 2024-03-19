@@ -1,4 +1,4 @@
-import { Outlet, useNavigation } from "react-router-dom";
+import { Outlet, useLocation, useNavigation } from "react-router-dom";
 import Header from "../components/Header";
 import Drawer from "@mui/material/Drawer";
 import { useState } from "react";
@@ -15,6 +15,7 @@ const Root = () => {
   const theme = useTheme();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { state } = useNavigation();
+  const location = useLocation();
 
   const { isPending: isPendingCategories } = useQuery(categoriesQuery());
 
@@ -24,6 +25,8 @@ const Root = () => {
     }
     setDrawerOpen((prevState) => !prevState);
   };
+
+  const disableNav = location.pathname === "/order";
 
   return (
     <>
@@ -35,7 +38,7 @@ const Root = () => {
             </Container>
           ) : (
             <>
-              <Header toggleDrawer={toggleDrawer} />
+              <Header toggleDrawer={toggleDrawer} disableNav={disableNav} />
               <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer}>
                 <DrawerContent />
               </Drawer>

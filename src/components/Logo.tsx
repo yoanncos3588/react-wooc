@@ -1,8 +1,12 @@
 import StyledLogo from "../styled/Logo";
 
-const Logo = () => {
+interface Props {
+  disableNav?: boolean;
+}
+
+const Logo = ({ disableNav = false }: Props) => {
   return (
-    <StyledLogo to="/">
+    <StyledLogo to={"/"} disableNav={disableNav}>
       React<span>WOOC</span>
     </StyledLogo>
   );
