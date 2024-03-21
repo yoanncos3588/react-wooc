@@ -1,4 +1,4 @@
-import { Order, OrderToPOST } from "../../types/order";
+import { OrderToPOST } from "../../types/order";
 import { axiosInstanceWoo } from "./api";
 import { snakeCase } from "change-case/keys";
 
@@ -8,8 +8,8 @@ const order = {
   create: async (order: OrderToPOST) => {
     return await axiosInstanceWoo.post("/orders", snakeCase(order, 3));
   },
-  edit: async (orderId: number, params: EditOrderParams<Order>) => {
-    return await axiosInstanceWoo.patch(`/orders/${orderId}`, snakeCase(params, 2));
+  edit: async (orderId: number, params: EditOrderParams<OrderToPOST>) => {
+    return await axiosInstanceWoo.patch(`/orders/${orderId}`, snakeCase(params, 3));
   },
   delete: async (orderId: number) => {
     return await axiosInstanceWoo.delete(`/orders/${orderId}`);
