@@ -6,12 +6,16 @@ import category from "./category";
 import product from "./product";
 import country from "./country";
 import customer from "./customer";
+import order from "./order";
+import user from "./user";
 
 export const api = {
   category,
   product,
   country,
   customer,
+  order,
+  user,
 };
 
 export interface UserStored {

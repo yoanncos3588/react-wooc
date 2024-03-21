@@ -1,6 +1,8 @@
 import { createContext, useState } from "react";
 import { UserStored } from "../services/api/api";
 import { AxiosResponse } from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { FormatedDataResponseType, getUserQuery } from "../queries";
 
 export const AuthContext = createContext<AuthProviderValue>({});
 
@@ -23,7 +25,7 @@ interface JWTAuthRes {
 
 const AuthProvider = ({ children }: Props) => {
   const [userData, setUserData] = useState(localStorage.getItem("user"));
-  const user: UserStored = userData ? JSON.parse(userData) : null;
+  const user: UserStored = userData ? JSON.parse(userData) : undefined;
 
   const login = (res: AxiosResponse<JWTAuthRes, unknown>) => {
     const user: UserStored = { username: res.data.user_display_name, token: res.data.token };

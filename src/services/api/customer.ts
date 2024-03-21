@@ -1,6 +1,6 @@
 import { snakeCase } from "change-case/keys";
 import { Customer } from "../../types/user";
-import { axiosInstanceWoo, axiosInstanceWp } from "./api";
+import { axiosInstanceWoo } from "./api";
 
 const customer = {
   /**
@@ -11,18 +11,11 @@ const customer = {
     return await axiosInstanceWoo.post("/customers", snakeCase(customer, 2));
   },
   /**
-   * Retrieve jwt
-   * https://fr.wordpress.org/plugins/jwt-authentication-for-wp-rest-api/
-   */
-  login: async ({ username, password }: { username: string; password: string }) => {
-    return await axiosInstanceWp.post("/jwt-auth/v1/token/", { username, password });
-  },
-  /**
    * Get user's infos not formatted from api
    * https://developer.wordpress.org/rest-api/reference/users/#definition-example-request-2
    */
-  get: async () => {
-    return await axiosInstanceWp.post("/wp/v2/users/me");
+  get: async (customerId: number) => {
+    return await axiosInstanceWoo.get(`/customers/${customerId}`);
   },
 };
 

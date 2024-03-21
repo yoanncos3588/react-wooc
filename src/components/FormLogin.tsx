@@ -22,7 +22,7 @@ const FormLogin = ({ handleSuccess, handleSignup }: Props) => {
 
   const mutation = useMutation({
     mutationFn: ({ username, password }: { username: string; password: string }) => {
-      return api.customer.login({ username, password });
+      return api.user.login({ username, password });
     },
 
     onSuccess: (data) => {
