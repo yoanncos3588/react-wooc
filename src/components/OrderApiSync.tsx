@@ -13,7 +13,7 @@ interface Props {
 }
 
 /**
- * Synchronize order whith API, order without id in LocalStorage are considered new order
+ * Synchronize order whith API, order without id in LocalStorage is considered as a new order
  */
 const OrderApiSync = ({ children }: Props) => {
   const { cart, setId } = useCart();
@@ -44,11 +44,9 @@ const OrderApiSync = ({ children }: Props) => {
       customerNote: "",
       billing: dataCustomer.data.billing,
       shipping: dataCustomer.data.shipping,
-      lineItemsLS: cart.lineItemsLS,
+      lineItems: cart.lineItemsLS,
       setPaid: false,
     };
-
-    console.log("orderToPostDefault", orderToPostDefault);
     if (!dataOrder) {
       // order is not existing in the BO, then create a new one
       mutate(orderToPostDefault);

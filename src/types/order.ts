@@ -6,16 +6,16 @@ export interface OrderLS {
   lineItemsLS: Array<LineItemLS>;
 }
 
-export interface OrderBeforePOST {
+export interface OrderToPOST {
   customerId: number;
   customerNote: string;
   billing: LocationInfos;
   shipping: ShippingInfos;
-  lineItemsLS: Array<LineItemLS>;
+  lineItems: Array<LineItemLS>;
   setPaid: boolean;
 }
 
-export interface Order extends Omit<OrderBeforePOST, "lineItemsLS"> {
+export interface Order extends Omit<OrderToPOST, "lineItemsLS"> {
   id: number;
   parentId: number;
   number: string;
