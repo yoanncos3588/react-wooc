@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { LineItemLS } from "../types/order";
+import { LineItemLS, OrderLS } from "../types/order";
 import { Product, ProductVariation } from "../types/products";
 
 export const CartContext = createContext<CartProviderValue>({} as CartProviderValue);
@@ -7,7 +7,7 @@ export const CartContext = createContext<CartProviderValue>({} as CartProviderVa
 const localStorageKey = "cart";
 
 interface CartProviderValue {
-  cart: Array<LineItemLS>;
+  cart: OrderLS;
   response: string | undefined;
   add: (product: Product, variation: ProductVariation | undefined) => void;
   remove: (productId: number, variationId: number | undefined) => void;
@@ -21,8 +21,10 @@ interface Props {
   children: React.ReactNode;
 }
 
+const cartDefaultValue: OrderLS = { id: null, lineItemsLS: [] };
+
 const CartProvider = ({ children }: Props) => {
-  const [cart, setCart] = useState<Array<LineItemLS>>(localStorage.getItem(localStorageKey) ? JSON.parse(localStorage.getItem(localStorageKey)!) : []);
+  const [cart, setCart] = useState<OrderLS>(localStorage.getItem(localStorageKey) ? JSON.parse(localStorage.getItem(localStorageKey)!) : cartDefaultValue);
   const [response, setResponse] = useState<string>();
 
   // keep local storage up to date with cart
@@ -34,32 +36,37 @@ const CartProvider = ({ children }: Props) => {
     const lineItemLS = buildLineItem(product, variation);
     const isItemInCart = !!findItemInCart(product.id, variation?.id);
     setResponse(isItemInCart ? "Ce produit est déjà dans votre panier" : "Produit ajouté au panier");
-    setCart((prev) => (isItemInCart ? prev : [...prev, lineItemLS]));
+    setCart((prev) => (isItemInCart ? prev : { ...prev, lineItemsLS: [...prev.lineItemsLS, lineItemLS] }));
   }
 
   function remove(productId: number, variationId: number | undefined = undefined) {
     setResponse("Produit supprimé du panier");
-    setCart((prev) => prev.filter((lineItem) => !isProductOrVariation(lineItem, productId, variationId)));
+    const lineItems = cart.lineItemsLS;
+    const filteredLineItems = lineItems.filter((lineItem) => !matchProductIdAndVariationId(lineItem, productId, variationId));
+    setCart((prev) => {
+      return { ...prev, lineItemsLS: filteredLineItems };
+    });
   }
 
   function updateQuantity(lineItemToUpdate: LineItemLS, quantity: number) {
     setCart((prev) => {
-      return prev.map((lineItem) => {
-        if (lineItemToUpdate.productId === lineItem.productId && lineItem.variationId === lineItem.variationId) {
+      const updatedLineItems = cart.lineItemsLS.map((lineItem) => {
+        if (matchProductIdAndVariationId(lineItem, lineItemToUpdate.productId, lineItemToUpdate.variationId)) {
           return { ...lineItem, quantity: quantity, total: calculPrice(lineItem.price, quantity) };
         } else {
           return lineItem;
         }
       });
+      return { ...prev, lineItemsLS: updatedLineItems };
     });
   }
 
   function emptyCart() {
-    setCart([]);
+    setCart(cartDefaultValue);
   }
 
   function getTotalPrice() {
-    const totalPrice = cart
+    const totalPrice = cart.lineItemsLS
       .map((lineItem) => Number(lineItem.total))
       .reduce((total, price) => {
         return total + price;
@@ -71,13 +78,13 @@ const CartProvider = ({ children }: Props) => {
    * find item in current cart
    */
   function findItemInCart(productId: number, variationId: number | undefined = undefined): LineItemLS | undefined {
-    return cart.find((lineItem) => isProductOrVariation(lineItem, productId, variationId));
+    return cart.lineItemsLS.find((lineItem) => matchProductIdAndVariationId(lineItem, productId, variationId));
   }
 
   /**
    * test if productId match the lineItem productId and the product variation id
    */
-  function isProductOrVariation(lineItem: LineItemLS, productIdToFind: number, variationIdToFind: number | undefined = undefined): boolean {
+  function matchProductIdAndVariationId(lineItem: LineItemLS, productIdToFind: number, variationIdToFind: number | undefined = undefined): boolean {
     return variationIdToFind ? variationIdToFind === lineItem.variationId && productIdToFind === lineItem.productId : productIdToFind === lineItem.productId;
   }
 

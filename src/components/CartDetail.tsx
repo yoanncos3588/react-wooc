@@ -16,9 +16,9 @@ const CartDetail = () => {
     return `${price} ${attributes ? " | " + attributes : ""}`;
   }
 
-  return cart.length >= 1 ? (
+  return cart.lineItemsLS.length >= 1 ? (
     <ListLineItemsStyled>
-      {cart.map((lineItem) => (
+      {cart.lineItemsLS.map((lineItem) => (
         <ListItem key={lineItem.variationId ? lineItem.variationId : lineItem.productId}>
           <ListItemAvatar>
             {lineItem.imageUrl ? (

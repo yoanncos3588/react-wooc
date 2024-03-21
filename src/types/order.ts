@@ -1,6 +1,11 @@
 import { LocationInfos, ShippingInfos } from "./billingShipping";
 import { VariationAttributes } from "./products";
 
+export interface OrderLS {
+  id: number | null;
+  lineItemsLS: Array<LineItemLS>;
+}
+
 export interface OrderBeforePOST {
   customerId: number;
   customerNote: string;

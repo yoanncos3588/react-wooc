@@ -8,7 +8,7 @@ function CartButton() {
 
   return (
     <IconButton component={RouterLink} to="/cart" aria-label="mon panier" size="large" sx={{ px: 2 }} edge="end">
-      <Badge badgeContent={cart.length} color="warning">
+      <Badge badgeContent={cart.lineItemsLS.length} color="warning">
         <ShoppingCartIcon />
       </Badge>
     </IconButton>
