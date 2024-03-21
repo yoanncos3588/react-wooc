@@ -15,13 +15,14 @@ interface CartProviderValue {
   emptyCart: () => void;
   findItemInCart: (productId: number, variationId: number | undefined) => LineItemLS | undefined;
   getTotalPrice: () => string;
+  setId: (orderId: number) => void;
 }
 
 interface Props {
   children: React.ReactNode;
 }
 
-const cartDefaultValue: OrderLS = { id: null, lineItemsLS: [] };
+const cartDefaultValue: OrderLS = { lineItemsLS: [] };
 
 const CartProvider = ({ children }: Props) => {
   const [cart, setCart] = useState<OrderLS>(localStorage.getItem(localStorageKey) ? JSON.parse(localStorage.getItem(localStorageKey)!) : cartDefaultValue);
@@ -58,6 +59,12 @@ const CartProvider = ({ children }: Props) => {
         }
       });
       return { ...prev, lineItemsLS: updatedLineItems };
+    });
+  }
+
+  function setId(orderId: number) {
+    setCart((prev) => {
+      return { id: orderId, ...prev };
     });
   }
 
@@ -112,7 +119,9 @@ const CartProvider = ({ children }: Props) => {
     return (Number(price) * quantity).toFixed(2);
   }
   return (
-    <CartContext.Provider value={{ cart, response, add, remove, updateQuantity, emptyCart, findItemInCart, getTotalPrice }}>{children}</CartContext.Provider>
+    <CartContext.Provider value={{ cart, response, add, remove, updateQuantity, emptyCart, findItemInCart, getTotalPrice, setId }}>
+      {children}
+    </CartContext.Provider>
   );
 };
 

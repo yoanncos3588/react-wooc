@@ -1,4 +1,4 @@
-import { categoriesQuery, countriesQuery, productQuery, productsQuery } from "./queries";
+import { FormatedDataResponseType, categoriesQuery, countriesQuery, getCustomerQuery, getUserWPQuery, productQuery, productsQuery } from "./queries";
 import { QueryClient } from "@tanstack/react-query";
 import { Params } from "react-router-dom";
 import { buildApiParams } from "./services/filters/products";
@@ -32,3 +32,9 @@ export const productLoader =
     const res = await queryClient.ensureQueryData(productQuery(id));
     return res;
   };
+
+export const orderLoader = (queryClient: QueryClient) => async () => {
+  // fetch user wp first to get user id
+  const { data: dataUser } = (await queryClient.ensureQueryData(getUserWPQuery())) as FormatedDataResponseType<{ id: number }>;
+  return await queryClient.ensureQueryData(getCustomerQuery(dataUser?.id));
+};

@@ -118,3 +118,33 @@ export const attributeTermsQuery = (attributeId: string) => ({
     return formatDataResponse(res);
   },
 });
+
+export const getUserWPQuery = () => ({
+  ...options,
+  queryKey: ["getUserWP"],
+  queryFn: async () => {
+    const res = await api.user.get();
+    return formatDataResponse(res);
+  },
+});
+
+export const getCustomerQuery = (customerId: number) => ({
+  ...options,
+  queryKey: ["getCustomerQuery", customerId],
+  queryFn: async () => {
+    console.log("customerId", customerId);
+    const res = await api.customer.get(customerId);
+    return formatDataResponse(res);
+  },
+  enabled: !!customerId,
+});
+
+export const getOrder = (orderId: number | undefined) => ({
+  ...options,
+  queryKey: ["getOrder", orderId],
+  queryFn: async () => {
+    const res = orderId && (await api.order.get(orderId));
+    return res;
+  },
+  enabled: !!orderId,
+});

@@ -14,6 +14,9 @@ const order = {
   delete: async (orderId: number) => {
     return await axiosInstanceWoo.delete(`/orders/${orderId}`);
   },
+  get: async (orderId: number) => {
+    return await axiosInstanceWoo.get(`/orders/${orderId}`);
+  },
 };
 
 export default order;

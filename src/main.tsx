@@ -16,13 +16,15 @@ import ProductPage from "./routes/ProductPage";
 import Root from "./routes/Root";
 import SignupPage from "./routes/SignupPage";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { categoryProductsLoader, countriesLoader, productLoader } from "./loader";
+import { categoryProductsLoader, countriesLoader, orderLoader, productLoader } from "./loader";
 import LoginPage from "./routes/LoginPage";
 import { RouteProtected } from "./components/RouteProtected";
 import AuthProvider from "./context/AuthContext";
 import { RouteForGuestOnly } from "./components/RouteForGuestOnly";
 import CartProvider from "./context/CartContext";
 import CartPage from "./routes/CartPage";
+import OrderPage from "./routes/OrderPage";
+import OrderApiSync from "./components/OrderApiSync";
 
 export const queryClient = new QueryClient();
 
@@ -64,8 +66,19 @@ const router = createBrowserRouter([
         loader: categoryProductsLoader(queryClient),
       },
       {
-        path: "cart/",
+        path: "cart",
         element: <CartPage />,
+      },
+      {
+        path: "order",
+        element: (
+          <RouteProtected>
+            <OrderApiSync>
+              <OrderPage />
+            </OrderApiSync>
+          </RouteProtected>
+        ),
+        loader: orderLoader(queryClient),
       },
     ],
   },
