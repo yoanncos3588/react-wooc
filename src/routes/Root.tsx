@@ -10,6 +10,7 @@ import { CircularProgress } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { categoriesQuery } from "../queries";
 import DialogProvider from "../context/DialogContext";
+import GlobalRouterAlert from "../components/GlobalRouterAlert";
 
 const Root = () => {
   const theme = useTheme();
@@ -49,6 +50,7 @@ const Root = () => {
               ) : (
                 <>
                   <Container sx={{ my: theme.spacing(5), flexGrow: 1 }}>
+                    <GlobalRouterAlert />
                     <Outlet />
                   </Container>
                   <Box sx={{ backgroundColor: theme.palette.primary.light, height: "50px" }}>Footer content here</Box>
