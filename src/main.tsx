@@ -24,7 +24,8 @@ import { RouteForGuestOnly } from "./components/RouteForGuestOnly";
 import CartProvider from "./context/CartContext";
 import CartPage from "./routes/CartPage";
 import OrderPage from "./routes/OrderPage";
-import OrderApiSync from "./components/OrderApiSync";
+import OrderApiSyncCreate from "./components/OrderApiSyncCreate";
+import OrderApiSyncEdit from "./components/OrderApiSyncEdit";
 
 export const queryClient = new QueryClient();
 
@@ -73,9 +74,11 @@ const router = createBrowserRouter([
         path: "order",
         element: (
           <RouteProtected>
-            <OrderApiSync>
-              <OrderPage />
-            </OrderApiSync>
+            <OrderApiSyncCreate>
+              <OrderApiSyncEdit>
+                <OrderPage />
+              </OrderApiSyncEdit>
+            </OrderApiSyncCreate>
           </RouteProtected>
         ),
         loader: orderLoader(queryClient),

@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { LineItemLS, Order, OrderLS } from "../types/order";
+import { LineItem, LineItemLS, LineItemToPOST, Order, OrderLS } from "../types/order";
 import { Product, ProductVariation, VariationAttributes } from "../types/products";
 
 export const CartContext = createContext<CartProviderValue>({} as CartProviderValue);
@@ -16,6 +16,7 @@ interface CartProviderValue {
   getTotalPrice: () => string;
   syncLocalCartAndOrder: (Order: Order) => void;
   getTotalProducts: () => number;
+  cleanLineItemForPOSTandPATCH: (lineItemLS: Array<LineItemLS> | Array<LineItem>) => Array<LineItemToPOST>;
 }
 
 interface Props {
@@ -79,7 +80,6 @@ const CartProvider = ({ children }: Props) => {
    * @param {Order} order : Order fetched from WC BO
    */
   function syncLocalCartAndOrder(order: Order) {
-    console.log("order syncLocalCartAndOrder", order);
     const lineItemsLS = order.lineItems.map((lineItem) => {
       return buildLineItemLS(
         lineItem.name,
@@ -95,6 +95,22 @@ const CartProvider = ({ children }: Props) => {
       );
     });
     setCart({ id: order.id, lineItems: lineItemsLS });
+  }
+
+  /**
+   * Remove useless data from local cart lines
+   * @param {LineItemLS} lineItemLS : cart line items
+   * @returns {LineItemToPOST[]} : cart line with essentials data for api
+   */
+  function cleanLineItemForPOSTandPATCH(lineItemLS: Array<LineItemLS> | Array<LineItem>): Array<LineItemToPOST> {
+    return lineItemLS.map((lineItem) => {
+      return {
+        ...(lineItem.id && { id: lineItem.id }),
+        productId: lineItem.productId,
+        ...(lineItem.variationId && { variationId: lineItem.variationId }),
+        quantity: lineItem.quantity,
+      };
+    });
   }
 
   function emptyCart() {
@@ -147,7 +163,6 @@ const CartProvider = ({ children }: Props) => {
     attributes?: VariationAttributes[],
     image?: string
   ): LineItemLS {
-    console.log("condition image", image && image !== "");
     return {
       name,
       productId,
@@ -169,7 +184,20 @@ const CartProvider = ({ children }: Props) => {
     return (Number(price) * Number(quantity)).toFixed(2);
   }
   return (
-    <CartContext.Provider value={{ cart, response, add, updateQuantity, emptyCart, findItemInCart, getTotalPrice, syncLocalCartAndOrder, getTotalProducts }}>
+    <CartContext.Provider
+      value={{
+        cart,
+        response,
+        add,
+        updateQuantity,
+        emptyCart,
+        findItemInCart,
+        getTotalPrice,
+        syncLocalCartAndOrder,
+        getTotalProducts,
+        cleanLineItemForPOSTandPATCH,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );

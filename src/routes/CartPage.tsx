@@ -25,7 +25,6 @@ const CartPage = () => {
         return;
       }
     }
-    console.log("ready to create order");
     navigate("/order");
   }
 

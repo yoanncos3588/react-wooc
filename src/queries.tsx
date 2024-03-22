@@ -132,7 +132,6 @@ export const getCustomerQuery = (customerId: number) => ({
   ...options,
   queryKey: ["getCustomerQuery", customerId],
   queryFn: async () => {
-    console.log("customerId", customerId);
     const res = await api.customer.get(customerId);
     return formatDataResponse(res);
   },
