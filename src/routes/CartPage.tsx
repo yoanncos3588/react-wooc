@@ -41,10 +41,10 @@ const CartPage = () => {
         <Grid item xs={12} md={4}>
           <Paper sx={{ p: 4 }}>
             <CartTotal />
-            <Button variant="contained" color="success" fullWidth sx={{ mt: 3 }} disabled={!(cart.lineItemsLS.length >= 1)} onClick={handleClickOrder}>
+            <Button variant="contained" color="success" fullWidth sx={{ mt: 3 }} disabled={!(cart.lineItems.length >= 1)} onClick={handleClickOrder}>
               Commander
             </Button>
-            <Button variant="outlined" color="error" fullWidth sx={{ mt: 3 }} disabled={!(cart.lineItemsLS.length >= 1)} onClick={handleClickEmpty}>
+            <Button variant="outlined" color="error" fullWidth sx={{ mt: 3 }} disabled={!(cart.lineItems.length >= 1)} onClick={handleClickEmpty}>
               Vider mon panier
             </Button>
           </Paper>

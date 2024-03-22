@@ -4,11 +4,11 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useCart } from "../hooks/useCart";
 
 function CartButton() {
-  const { cart } = useCart();
+  const { getTotalProducts } = useCart();
 
   return (
     <IconButton component={RouterLink} to="/cart" aria-label="mon panier" size="large" sx={{ px: 2 }} edge="end">
-      <Badge badgeContent={cart.lineItemsLS.length} color="warning">
+      <Badge badgeContent={getTotalProducts()} color="warning">
         <ShoppingCartIcon />
       </Badge>
     </IconButton>

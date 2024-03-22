@@ -3,7 +3,7 @@ import { VariationAttributes } from "./products";
 
 export interface OrderLS {
   id?: number;
-  lineItemsLS: Array<LineItemLS>;
+  lineItems: Array<LineItemLS>;
 }
 
 export interface OrderToPOST {
@@ -11,11 +11,11 @@ export interface OrderToPOST {
   customerNote: string;
   billing: LocationInfos;
   shipping: ShippingInfos;
-  lineItems: Array<LineItemLS>;
+  lineItems: Array<LineItemToPOST>;
   setPaid: boolean;
 }
 
-export interface Order extends Omit<OrderToPOST, "lineItemsLS"> {
+export interface Order extends Omit<OrderToPOST, "lineItems"> {
   id: number;
   parentId: number;
   number: string;
@@ -44,16 +44,20 @@ export interface Order extends Omit<OrderToPOST, "lineItemsLS"> {
   shippingLines: Array<ShippingLine>;
 }
 
-export interface LineItemLS {
-  name: string;
+export interface LineItemToPOST {
+  id?: number;
   productId: number;
-  variationId?: number | undefined;
-  slug: string;
-  price: string;
+  variationId?: number;
   quantity: number;
+}
+
+export interface LineItemLS extends LineItemToPOST {
+  name: string;
+  slug: string;
+  price: number;
   total: string;
-  attributes: VariationAttributes[] | undefined;
-  imageUrl: string | undefined;
+  attributes?: VariationAttributes[];
+  image?: { src: string };
 }
 
 export interface LineItem extends LineItemLS {
@@ -65,7 +69,6 @@ export interface LineItem extends LineItemLS {
   taxes: Array<Taxe>;
   meta_data: Array<MetaData>;
   sku: string;
-  price: string;
 }
 
 export interface MetaData {

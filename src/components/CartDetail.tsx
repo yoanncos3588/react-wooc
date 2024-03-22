@@ -7,7 +7,7 @@ import { useCart } from "../hooks/useCart";
 import { LineItemLS } from "../types/order";
 
 const CartDetail = () => {
-  const { cart, updateQuantity, remove } = useCart();
+  const { cart, updateQuantity } = useCart();
 
   function generateSecondaryText(lineItem: LineItemLS) {
     const price = `prix unitaire : ${Number(lineItem.price).toFixed(2)} €`;
@@ -16,43 +16,46 @@ const CartDetail = () => {
     return `${price} ${attributes ? " | " + attributes : ""}`;
   }
 
-  return cart.lineItemsLS.length >= 1 ? (
+  return cart.lineItems.length >= 1 ? (
     <ListLineItemsStyled>
-      {cart.lineItemsLS.map((lineItem) => (
-        <ListItem key={lineItem.variationId ? lineItem.variationId : lineItem.productId}>
-          <ListItemAvatar>
-            {lineItem.imageUrl ? (
-              <Avatar src={lineItem.imageUrl} />
-            ) : (
-              <Avatar>
-                <ImageIcon />
-              </Avatar>
-            )}
-          </ListItemAvatar>
-          <Box className="ListLineItemsStyled__link">
-            <Link to={`/product/${lineItem.slug}/${lineItem.productId}`}>
-              <ListItemText primary={lineItem.name} secondary={generateSecondaryText(lineItem)} />
-            </Link>
-          </Box>
-          <Stack direction={"row"} spacing={3}>
-            <Select value={lineItem.quantity} onChange={(e) => updateQuantity(lineItem, Number(e.target.value))} className="ListLineItemsStyled__qty">
-              {[...Array(10)].map((_, i) => (
-                <MenuItem value={i + 1} key={i}>
-                  {i + 1}
-                </MenuItem>
-              ))}
-            </Select>
-            <Box className="ListLineItemsStyled__price">
-              <Typography>{lineItem.total} €</Typography>
-            </Box>
-            <Box className="ListLineItemsStyled__delete">
-              <IconButton aria-label="delete" onClick={() => remove(lineItem.productId, lineItem.variationId)}>
-                <DeleteIcon />
-              </IconButton>
-            </Box>
-          </Stack>
-        </ListItem>
-      ))}
+      {cart.lineItems.map(
+        (lineItem) =>
+          lineItem.quantity > 0 && (
+            <ListItem key={lineItem.variationId ? lineItem.variationId : lineItem.productId}>
+              <ListItemAvatar>
+                {lineItem.image && lineItem.image.src !== "" ? (
+                  <Avatar src={lineItem.image.src} />
+                ) : (
+                  <Avatar>
+                    <ImageIcon />
+                  </Avatar>
+                )}
+              </ListItemAvatar>
+              <Box className="ListLineItemsStyled__link">
+                <Link to={`/product/${lineItem.slug}/${lineItem.productId}`}>
+                  <ListItemText primary={lineItem.name} secondary={generateSecondaryText(lineItem)} />
+                </Link>
+              </Box>
+              <Stack direction={"row"} spacing={3}>
+                <Select value={lineItem.quantity} onChange={(e) => updateQuantity(lineItem, Number(e.target.value))} className="ListLineItemsStyled__qty">
+                  {[...Array(10)].map((_, i) => (
+                    <MenuItem value={i + 1} key={i}>
+                      {i + 1}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <Box className="ListLineItemsStyled__price">
+                  <Typography>{lineItem.total} €</Typography>
+                </Box>
+                <Box className="ListLineItemsStyled__delete">
+                  <IconButton aria-label="delete" onClick={() => updateQuantity(lineItem, 0)}>
+                    <DeleteIcon />
+                  </IconButton>
+                </Box>
+              </Stack>
+            </ListItem>
+          )
+      )}
     </ListLineItemsStyled>
   ) : (
     <Typography variant="h5" p={4}>
