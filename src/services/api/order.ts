@@ -2,13 +2,11 @@ import { OrderToPOST } from "../../types/order";
 import { axiosInstanceWoo } from "./api";
 import { snakeCase } from "change-case/keys";
 
-type EditOrderParams<T> = Partial<T>;
-
 const order = {
   create: async (order: OrderToPOST) => {
     return await axiosInstanceWoo.post("/orders", snakeCase(order, 3));
   },
-  edit: async (orderId: number, params: EditOrderParams<OrderToPOST>) => {
+  edit: async (orderId: number, params: Partial<OrderToPOST>) => {
     return await axiosInstanceWoo.patch(`/orders/${orderId}`, snakeCase(params, 3));
   },
   delete: async (orderId: number) => {

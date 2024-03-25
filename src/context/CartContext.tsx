@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { LineItem, LineItemLS, LineItemToPOST, Order, OrderLS } from "../types/order";
+import { LineItemLS, Order, OrderLS } from "../types/order";
 import { Product, ProductVariation, VariationAttributes } from "../types/products";
 
 export const CartContext = createContext<CartProviderValue>({} as CartProviderValue);
@@ -14,9 +14,8 @@ interface CartProviderValue {
   emptyCart: () => void;
   findItemInCart: (productId: number, variationId: number | undefined) => LineItemLS | undefined;
   getTotalPrice: () => string;
-  syncLocalCartAndOrder: (Order: Order) => void;
+  syncLocalCartWithOrder: (Order: Order) => void;
   getTotalProducts: () => number;
-  cleanLineItemForPOSTandPATCH: (lineItemLS: Array<LineItemLS> | Array<LineItem>) => Array<LineItemToPOST>;
 }
 
 interface Props {
@@ -79,7 +78,7 @@ const CartProvider = ({ children }: Props) => {
    * Sync order cart from BO to FO cart
    * @param {Order} order : Order fetched from WC BO
    */
-  function syncLocalCartAndOrder(order: Order) {
+  function syncLocalCartWithOrder(order: Order) {
     const lineItemsLS = order.lineItems.map((lineItem) => {
       return buildLineItemLS(
         lineItem.name,
@@ -95,22 +94,6 @@ const CartProvider = ({ children }: Props) => {
       );
     });
     setCart({ id: order.id, lineItems: lineItemsLS });
-  }
-
-  /**
-   * Remove useless data from local cart lines
-   * @param {LineItemLS} lineItemLS : cart line items
-   * @returns {LineItemToPOST[]} : cart line with essentials data for api
-   */
-  function cleanLineItemForPOSTandPATCH(lineItemLS: Array<LineItemLS> | Array<LineItem>): Array<LineItemToPOST> {
-    return lineItemLS.map((lineItem) => {
-      return {
-        ...(lineItem.id && { id: lineItem.id }),
-        productId: lineItem.productId,
-        ...(lineItem.variationId && { variationId: lineItem.variationId }),
-        quantity: lineItem.quantity,
-      };
-    });
   }
 
   function emptyCart() {
@@ -193,9 +176,8 @@ const CartProvider = ({ children }: Props) => {
         emptyCart,
         findItemInCart,
         getTotalPrice,
-        syncLocalCartAndOrder,
+        syncLocalCartWithOrder,
         getTotalProducts,
-        cleanLineItemForPOSTandPATCH,
       }}
     >
       {children}

@@ -1,46 +1,36 @@
 import { useCart } from "../hooks/useCart";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Order } from "../types/order";
 import { FormatedDataResponseType, getOrder } from "../queries";
-import { AxiosError } from "axios";
 import { ReactNode, useCallback, useEffect, useState } from "react";
-import { api } from "../services/api/api";
 import { camelCase } from "change-case/keys";
 import isEqual from "lodash.isequal";
-import { queryClient } from "../main";
+import { useUpdateOrder } from "../hooks/useUpdateOrder";
 import { useNavigate } from "react-router-dom";
+import Loading from "./Loading";
 
 interface Props {
   children: ReactNode;
 }
+
+/**
+ * Guard component to keep cart line items and order sync when entering ordering tunnel
+ */
 const OrderApiSyncEdit = ({ children }: Props) => {
-  const { cart, syncLocalCartAndOrder, cleanLineItemForPOSTandPATCH } = useCart();
+  const { cart } = useCart();
   const { data: dataOrder, isPending: isPendingOrder } = useQuery(getOrder(cart.id)) as FormatedDataResponseType<{ data: Order }>;
+
+  const { editOrderMutation: editOrder, isPendingEditingOrder, isErrorEditingOrder, cleanLineItemForPOSTandPATCH } = useUpdateOrder();
+
   const navigate = useNavigate();
 
   // Flag to indicate whether syncLocalCartAndOrder is in progress
-  const [isSyncing, setIsSyncing] = useState(false);
-
-  // use destructuring because useMutation returned object change every response, causing rerendering loop in useEffect
-  const { mutate: editOrder, isPending: editIsPending } = useMutation({
-    mutationFn: (cartId: number) => {
-      return api.order.edit(cartId, { lineItems: cleanLineItemForPOSTandPATCH(cart.lineItems) });
-    },
-    onSuccess: (data) => {
-      // invalid query order
-      queryClient.invalidateQueries({ queryKey: ["getOrder", cart.id] });
-      syncLocalCartAndOrder(camelCase(data.data, 3) as Order);
-    },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onError: (_error: AxiosError<{ code: string; message: string }>) => {
-      navigate("/cart", { state: { errorMessage: "Une erreur est survenue pendant la génération de la commande" } });
-    },
-  });
+  const [isWrittingLS, setIsWrittingLS] = useState(false);
 
   /**
-   * Test if line items in current cart and order are equals, meaning sync is done
+   * Test if line items in current cart and order are equals, meaning sync is done or nothing has changed
    */
-  const cartAndOrderLineItemsEquals = useCallback(() => {
+  const isCartAndOrderLineItemsEquals = useCallback(() => {
     const dataOrderCamel = camelCase(dataOrder.data, 3) as Order;
     const currentLineItems = cleanLineItemForPOSTandPATCH(cart.lineItems);
     const orderLineItems = cleanLineItemForPOSTandPATCH(dataOrderCamel.lineItems);
@@ -49,23 +39,35 @@ const OrderApiSyncEdit = ({ children }: Props) => {
 
   /** useEffect to update order line items in BO */
   useEffect(() => {
-    if (cart.id && !isPendingOrder && !editIsPending) {
+    if (cart.id && !isPendingOrder && !isPendingEditingOrder) {
+      console.log("order is loaded");
       // order is loaded
-      if (!isSyncing && cartAndOrderLineItemsEquals()) {
-        setIsSyncing(true);
-        editOrder(cart.id);
+      if (!isWrittingLS && !isCartAndOrderLineItemsEquals()) {
+        console.log("start edit order");
+        // localstorage is not being written and local cart and distant order dont have the same items
+        setIsWrittingLS(true);
+        editOrder({ cartId: cart.id, params: { lineItems: cleanLineItemForPOSTandPATCH(cart.lineItems) } });
       }
     }
-  }, [cart.id, cartAndOrderLineItemsEquals, editIsPending, editOrder, isPendingOrder, isSyncing]);
+  }, [cart.id, cart.lineItems, cleanLineItemForPOSTandPATCH, editOrder, isCartAndOrderLineItemsEquals, isPendingEditingOrder, isPendingOrder, isWrittingLS]);
 
   /** useEffect for sync state status */
   useEffect(() => {
-    if (isSyncing) {
-      if (cartAndOrderLineItemsEquals()) {
-        setIsSyncing(false);
+    if (isWrittingLS) {
+      if (isCartAndOrderLineItemsEquals()) {
+        // localstorage is being written and local cart is equal distant order
+        setIsWrittingLS(false);
       }
     }
-  }, [cart, cartAndOrderLineItemsEquals, isSyncing]);
+  }, [cart, isCartAndOrderLineItemsEquals, isWrittingLS]);
+
+  if (isPendingEditingOrder) {
+    return <Loading />;
+  }
+
+  if (isErrorEditingOrder) {
+    navigate("/cart", { state: { errorMessage: "Une erreur est survenue pendant la génération de la commande" } });
+  }
 
   return children;
 };
