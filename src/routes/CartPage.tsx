@@ -1,14 +1,14 @@
 import { Button, Grid, Paper } from "@mui/material";
-import CartDetail from "../components/CartDetail";
+import LineItemsList from "../components/LineItemsList";
 import PageTitle from "../components/PageTitle";
-import CartTotal from "../components/CartTotal";
+import OrderSummary from "../components/OrderSummary";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { useCart } from "../hooks/useCart";
 import { useDialog } from "../hooks/useDialog";
 
 const CartPage = () => {
-  const { cart, emptyCart } = useCart();
+  const { cart, emptyCart, getTotalPrice } = useCart();
   const { user } = useAuth();
   const { dialog } = useDialog();
   const navigate = useNavigate();
@@ -34,12 +34,12 @@ const CartPage = () => {
       <Grid container spacing={2}>
         <Grid item xs={12} md={8}>
           <Paper>
-            <CartDetail />
+            <LineItemsList lineItems={cart.lineItems} editable />
           </Paper>
         </Grid>
         <Grid item xs={12} md={4}>
           <Paper sx={{ p: 4 }}>
-            <CartTotal />
+            <OrderSummary toBePayedTotal={getTotalPrice()} lineItemsPrice={getTotalPrice()} />
             <Button variant="contained" color="success" fullWidth sx={{ mt: 3 }} disabled={!(cart.lineItems.length >= 1)} onClick={handleClickOrder}>
               Commander
             </Button>

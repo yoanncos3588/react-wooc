@@ -113,7 +113,7 @@ const CartProvider = ({ children }: Props) => {
    * Get total number of products in cart
    * @returns {number} number of line item in cart excluding line item with 0 quantity
    */
-  function getTotalProducts() {
+  function getTotalProducts(): number {
     return cart.lineItems.filter((lineItem) => lineItem.quantity > 0).length;
   }
 

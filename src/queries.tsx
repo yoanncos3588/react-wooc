@@ -138,12 +138,12 @@ export const getCustomerQuery = (customerId: number) => ({
   enabled: !!customerId,
 });
 
-export const getOrder = (orderId: number | undefined) => ({
+export const getOrder = (orderId: number) => ({
   ...options,
   queryKey: ["getOrder", orderId],
   queryFn: async () => {
-    const res = orderId && (await api.order.get(orderId));
-    return res;
+    const res = await api.order.get(orderId);
+    return formatDataResponse(res);
   },
   enabled: !!orderId,
 });
