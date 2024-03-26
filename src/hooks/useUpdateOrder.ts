@@ -14,8 +14,8 @@ export const useUpdateOrder = () => {
     isError: isErrorEditingOrder,
     isSuccess: isSuccessEditingOrder,
   } = useMutation({
-    mutationFn: ({ cartId, params }: { cartId: number; params: Partial<OrderToPOST> }) => {
-      return api.order.edit(cartId, params);
+    mutationFn: ({ orderId, params }: { orderId: number; params: Partial<OrderToPOST> }) => {
+      return api.order.edit(orderId, params);
     },
     onSuccess: (data) => {
       syncLocalCartWithOrder(camelCase(data.data, 3) as Order);

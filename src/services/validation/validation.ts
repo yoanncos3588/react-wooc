@@ -20,6 +20,7 @@ const validation = {
    * @returns {InputStatus}
    */
   validInput(value: string, rules: Rule[]): InputStatus {
+    console.log(value);
     for (const rule of rules) {
       const result = rule(value);
       if (!result.valid) {
@@ -37,7 +38,7 @@ const validation = {
    * @param rules set of rules
    * @returns {boolean}
    */
-  validData: (data: { [key: string]: string }, rules: { [key: string]: Rule[] }) => {
+  validData: (data: { [key: string]: string }, rules: { [key: string]: Rule[] }): boolean => {
     // test if obj is non empty and is an obj
     if (data.constructor.name !== "Object" || (Object.keys(data).length === 0 && data.constructor === Object)) {
       return false;

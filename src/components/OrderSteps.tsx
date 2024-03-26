@@ -3,15 +3,15 @@ import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Grid, Paper, Skeleton } from "@mui/material";
-import LineItemsList from "./LineItemsList";
 import OrderSummary from "./OrderSummary";
 import { useQuery } from "@tanstack/react-query";
 import { getOrder, FormatedDataResponseType } from "../queries";
 import { Order } from "../types/order";
 import { useCart } from "../hooks/useCart";
+import OrderStepsShipping from "./OrderStepsShipping";
+import OrderStepSummary from "./OrderStepSummary";
 
 const steps = ["Récapitulatif", "Vos informations", "Livraison", "Paiement"];
 
@@ -20,15 +20,8 @@ const OrderSteps = () => {
 
   const [activeStep, setActiveStep] = React.useState(0);
 
-  const { data: dataOrder, isPending: isPendingOrder } = useQuery(getOrder(cart.id)) as FormatedDataResponseType<{ data: Order }>;
-
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
+  const { data: dataOrder, isPending: isPendingOrder } = useQuery(getOrder(cart.id!)) as FormatedDataResponseType<{ data: Order }>;
+  console.log(dataOrder?.data);
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -56,7 +49,8 @@ const OrderSteps = () => {
         <React.Fragment>
           <Grid container spacing={2}>
             <Grid item xs={12} md={8}>
-              <Paper>{activeStep === 0 && <LineItemsList lineItems={dataOrder.data.lineItems} />}</Paper>
+              {activeStep === 0 && <OrderStepSummary setActiveStep={setActiveStep} activeStep={activeStep} stepsTotal={steps.length} />}
+              {activeStep === 1 && <OrderStepsShipping setActiveStep={setActiveStep} activeStep={activeStep} stepsTotal={steps.length} />}
             </Grid>
             <Grid item xs={12} md={4}>
               <Paper sx={{ p: 4 }}>
@@ -64,13 +58,6 @@ const OrderSteps = () => {
               </Paper>
             </Grid>
           </Grid>
-          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-            <Button color="inherit" disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>
-              Back
-            </Button>
-            <Box sx={{ flex: "1 1 auto" }} />
-            <Button onClick={handleNext}>{activeStep === steps.length - 1 ? "Finish" : "Next"}</Button>
-          </Box>
         </React.Fragment>
       ) : (
         <Grid container spacing={2}>

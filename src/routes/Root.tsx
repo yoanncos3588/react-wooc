@@ -27,7 +27,8 @@ const Root = () => {
     setDrawerOpen((prevState) => !prevState);
   };
 
-  const disableNav = location.pathname === "/order";
+  // const disableNav = location.pathname === "/order";
+  const disableNav = false;
 
   return (
     <>

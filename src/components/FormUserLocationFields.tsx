@@ -1,14 +1,15 @@
 import { Grid, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import TextFieldWithValidation from "./TextFieldWithValidation";
-import { LocationInfos } from "../types/billingShipping";
+import { LocationInfos, ShippingInfos } from "../types/billingShipping";
 import SelectCountry from "./SelectCountry";
 import validation, { Rule } from "../services/validation/validation";
 
 interface Props {
-  isBilling: boolean;
+  isBilling?: boolean;
+  defaultInfos?: ShippingInfos | LocationInfos;
 }
-const FormUserLocationFields = ({ isBilling }: Props) => {
+const FormUserLocationFields = ({ isBilling = false, defaultInfos }: Props) => {
   const theme = useTheme();
   const formType = isBilling ? "billing" : "shipping";
 
@@ -20,6 +21,7 @@ const FormUserLocationFields = ({ isBilling }: Props) => {
         label={label}
         data-test-id={`${formType}${key}`}
         validationRules={validationRules}
+        value={defaultInfos ? defaultInfos[key] : undefined}
       />
     </Grid>
   );
@@ -43,6 +45,7 @@ const FormUserLocationFields = ({ isBilling }: Props) => {
           data-test-id={`${formType}country`}
           validationRules={validation.rules.user.location.country}
           name={`${formType}country`}
+          defaultCountryCode={defaultInfos?.country}
         />
       </Grid>
       {isBilling && (

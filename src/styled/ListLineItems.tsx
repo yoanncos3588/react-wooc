@@ -3,8 +3,6 @@ import { List, styled } from "@mui/material";
 const ListLineItemsStyled = styled(List)(({ theme }) => ({
   "& > .MuiListItem-root": {
     borderBottom: `1px solid ${theme.palette.divider}`,
-    paddingBottom: theme.spacing(4),
-    paddingTop: theme.spacing(4),
     flexWrap: "wrap",
     [theme.breakpoints.up("md")]: { flexDirection: "row" },
     "&:last-child": {

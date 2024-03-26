@@ -21,9 +21,9 @@ export interface FormatedDataResponseType<T> {
 function formatDataToCamelCase(data: unknown) {
   let formated = null;
   if (Array.isArray(data)) {
-    formated = data.map((item: unknown) => camelCase(item));
+    formated = data.map((item: unknown) => camelCase(item, 4));
   } else {
-    formated = camelCase(data);
+    formated = camelCase(data, 4);
   }
   return formated;
 }
